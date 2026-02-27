@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoFlow CRM — Built for the Automotive Floor</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080809;
+  --s1:#0d0d0f;
+  --s2:#111114;
+  --s3:#161619;
+  --s4:#1c1c20;
+  --bd:#222228;
+  --bd2:#2d2d34;
+  --w:#f0f0f3;
+  --w60:rgba(240,240,243,.6);
+  --w40:rgba(240,240,243,.4);
+  --w20:rgba(240,240,243,.2);
+  --w10:rgba(240,240,243,.1);
+  --w06:rgba(240,240,243,.06);
+  --w03:rgba(240,240,243,.03);
+  --tx:#aaaab4;
+  --mu:#505058;
+  --dim:#252530;
+  --am:#f0a500;
+  --am-lo:rgba(240,165,0,.07);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--tx);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.6;
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:100;opacity:.022;mix-blend-mode:overlay;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  height:66px;padding:0 56px;
+  transition:background .5s,border-color .5s;
+}
+nav.scrolled{
+  background:rgba(8,8,9,.93);
+  border-bottom:1px solid var(--bd);
+  backdrop-filter:blur(20px);
+}
+.n-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.n-mark{
+  width:30px;height:30px;border-radius:7px;background:var(--w);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:10px;color:var(--bg);flex-shrink:0;
+}
+.n-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;font-weight:500;color:var(--w);letter-spacing:-.01em;
+}
+.n-name span{
+  display:block;font-family:'JetBrains Mono',monospace;
+  font-size:.5rem;color:var(--mu);letter-spacing:.22em;
+  text-transform:uppercase;margin-top:1px;font-weight:400;
+}
+.n-links{
+  display:flex;gap:40px;
+  position:absolute;left:50%;transform:translateX(-50%);
+}
+.n-links a{
+  font-size:.8rem;color:var(--mu);text-decoration:none;
+  transition:color .2s;letter-spacing:.01em;
+}
+.n-links a:hover{color:var(--w)}
+.n-right{display:flex;gap:14px;align-items:center}
+.n-in{font-size:.8rem;color:var(--mu);text-decoration:none;transition:color .2s}
+.n-in:hover{color:var(--w)}
+.n-demo{
+  background:var(--w);color:var(--bg);
+  padding:9px 22px;border-radius:5px;
+  font-size:.8rem;font-weight:600;text-decoration:none;
+  transition:opacity .2s,transform .15s;
+}
+.n-demo:hover{opacity:.88;transform:translateY(-1px)}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:150px 56px 100px;
+  position:relative;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--w03) 1px,transparent 1px),
+    linear-gradient(90deg,var(--w03) 1px,transparent 1px);
+  background-size:88px 88px;
+  mask-image:radial-gradient(ellipse 70% 50% at 50% 0%,black,transparent);
+  pointer-events:none;z-index:0;
+}
+.hero-inner{
+  position:relative;z-index:1;
+  max-width:1080px;margin:0 auto;width:100%;
+}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:12px;
+  margin-bottom:32px;
+  opacity:0;animation:rise .7s .05s ease forwards;
+}
+.ey-line{width:24px;height:1px;background:var(--am)}
+.ey-txt{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:var(--am);
+  letter-spacing:.22em;text-transform:uppercase;
+}
+
+.h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(4.2rem,9vw,9.5rem);
+  line-height:.91;letter-spacing:-.035em;
+  color:var(--w);font-weight:400;
+  margin-bottom:36px;
+  opacity:0;animation:rise .9s .15s ease forwards;
+}
+.h1 em{font-style:italic;color:var(--w40)}
+
+.h-sub{
+  font-size:1.05rem;color:var(--mu);
+  max-width:440px;line-height:1.9;font-weight:300;
+  opacity:0;animation:rise .9s .28s ease forwards;
+}
+.h-sub strong{color:var(--tx);font-weight:400}
+
+.h-btns{
+  margin-top:40px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  opacity:0;animation:rise .9s .38s ease forwards;
+}
+.btn-w{
+  background:var(--w);color:var(--bg);
+  padding:13px 30px;border-radius:5px;
+  font-size:.86rem;font-weight:600;text-decoration:none;
+  transition:opacity .2s,transform .15s;
+}
+.btn-w:hover{opacity:.88;transform:translateY(-2px)}
+.btn-o{
+  background:transparent;color:var(--w40);
+  padding:13px 30px;border-radius:5px;
+  font-size:.86rem;font-weight:400;text-decoration:none;
+  border:1px solid var(--bd2);transition:color .2s,border-color .2s;
+}
+.btn-o:hover{color:var(--w);border-color:var(--w20)}
+.h-note{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--dim);letter-spacing:.06em;
+}
+
+@keyframes rise{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.reveal{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.reveal.on{opacity:1;transform:translateY(0)}
+
+/* WORKFLOW PANEL */
+.wf-wrap{
+  margin-top:72px;
+  opacity:0;animation:rise 1s .5s ease forwards;
+}
+.wf-lbl{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:var(--mu);
+  letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.wf-lbl::before{content:'';display:block;width:20px;height:1px;background:var(--bd2)}
+
+.wf-panel{
+  background:var(--s1);
+  border:1px solid var(--bd);
+  border-radius:14px;overflow:hidden;
+  max-width:960px;
+  box-shadow:
+    0 0 0 1px rgba(240,240,243,.025),
+    0 48px 100px rgba(0,0,0,.7),
+    0 96px 200px rgba(0,0,0,.4),
+    inset 0 1px 0 rgba(240,240,243,.04);
+}
+.wf-bar{
+  background:var(--s2);border-bottom:1px solid var(--bd);
+  padding:13px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.wf-dots{display:flex;gap:6px}
+.wf-dot{width:10px;height:10px;border-radius:50%}
+.wf-dot.r{background:#ff5f57}
+.wf-dot.y{background:#febc2e}
+.wf-dot.g{background:#28c840}
+.wf-tabs{display:flex;gap:2px}
+.wf-tab{
+  padding:5px 14px;border-radius:5px;
+  font-size:.7rem;color:var(--mu);cursor:default;
+}
+.wf-tab.on{background:var(--w06);color:var(--w60)}
+.wf-hint{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:var(--dim);letter-spacing:.08em;
+}
+
+.wf-body{
+  padding:22px;
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:14px;
+}
+.wf-col{
+  border:1px solid var(--bd);
+  border-radius:9px;overflow:hidden;
+}
+.wf-col-head{
+  padding:11px 14px;
+  background:var(--s2);
+  border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.wf-col-src{font-size:.74rem;font-weight:500;color:var(--w60)}
+.wf-col-ct{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--mu);
+}
+.wf-stages{padding:8px}
+.wf-stage{
+  padding:8px 11px;border-radius:6px;
+  display:flex;align-items:center;gap:9px;
+  margin-bottom:2px;cursor:default;
+  transition:background .15s;
+}
+.wf-stage:hover{background:var(--w06)}
+.wf-stage.active{
+  background:var(--w06);
+  border:1px solid var(--bd2);
+}
+.wf-dot-s{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.wf-name{font-size:.72rem;color:var(--tx);flex:1}
+.wf-stage.active .wf-name{color:var(--w60)}
+.wf-sub{font-size:.62rem;color:var(--mu)}
+
+
+/* PERSONAS */
+.tpl-sec{padding:130px 56px;background:var(--bg);position:relative;z-index:1}
+.tpl-inner{max-width:1080px;margin:0 auto}
+.tpl-top{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:56px}
+.tpl-h{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,5vw,5rem);line-height:.96;letter-spacing:-.035em;color:var(--w);font-weight:400;margin-bottom:0}
+.tpl-h em{font-style:italic;color:var(--w40)}
+.tpl-p{font-size:.92rem;color:var(--mu);line-height:1.88;font-weight:300;align-self:end}
+.tpl-p strong{color:var(--tx);font-weight:400}
+
+.tpl-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.tc{background:var(--s1);padding:40px 32px;transition:background .25s}
+.tc:hover{background:var(--s2)}
+.tc-n{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--dim);letter-spacing:.14em;margin-bottom:24px}
+.tc-name{font-family:'Cormorant Garamond',serif;font-size:1.65rem;color:var(--w);letter-spacing:-.02em;line-height:1.1;margin-bottom:5px;font-weight:400}
+.tc-role{font-size:.76rem;color:var(--mu);font-style:italic;margin-bottom:20px}
+.tc-desc{font-size:.82rem;color:var(--mu);line-height:1.72;font-weight:300;margin-bottom:28px}
+.tc-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.tc-list li{font-size:.76rem;color:var(--mu);display:flex;align-items:flex-start;gap:12px;line-height:1.4}
+.tc-list li::before{content:'';display:block;width:14px;height:1px;background:var(--bd2);margin-top:8px;flex-shrink:0}
+
+
+/* DIFFERENTIATORS */
+.diff-sec{
+  padding:130px 56px;
+  background:var(--s1);
+  border-top:1px solid var(--bd);
+  border-bottom:1px solid var(--bd);
+  position:relative;z-index:1;
+}
+.diff-inner{max-width:1080px;margin:0 auto}
+
+.s-eye{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:20px;
+}
+.s-eye-line{width:24px;height:1px;background:var(--am)}
+.s-eye-txt{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:var(--am);
+  letter-spacing:.22em;text-transform:uppercase;
+}
+
+.diff-hd{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:64px;align-items:end;margin-bottom:72px;
+}
+.diff-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.6rem,4.5vw,4.8rem);
+  line-height:.97;letter-spacing:-.035em;
+  color:var(--w);font-weight:400;
+}
+.diff-h em{font-style:italic;color:var(--w40)}
+.diff-p{
+  font-size:.92rem;color:var(--mu);
+  line-height:1.88;font-weight:300;align-self:end;
+}
+.diff-p strong{color:var(--tx);font-weight:400}
+
+.diff-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--bd);
+  border:1px solid var(--bd);border-radius:12px;overflow:hidden;
+}
+.dc{
+  background:var(--bg);padding:40px 32px;
+  position:relative;transition:background .25s;overflow:hidden;
+}
+.dc:hover{background:var(--s1)}
+.dc::after{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--w20),transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s ease;
+}
+.dc:hover::after{transform:scaleX(1)}
+.dc-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:var(--dim);
+  letter-spacing:.12em;margin-bottom:20px;
+}
+.dc-only{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.54rem;color:var(--am);
+  letter-spacing:.16em;text-transform:uppercase;
+  margin-bottom:10px;
+  opacity:0;transition:opacity .3s;
+}
+.dc:hover .dc-only{opacity:1}
+.dc-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem;color:var(--w);
+  font-weight:400;line-height:1.15;
+  letter-spacing:-.02em;margin-bottom:12px;
+}
+.dc-body{
+  font-size:.82rem;color:var(--mu);
+  line-height:1.78;font-weight:300;
+}
+.dc-body strong{color:var(--tx);font-weight:400}
+.dc-proof{
+  margin-top:18px;padding-top:18px;
+  border-top:1px solid var(--bd);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.57rem;color:var(--dim);
+  letter-spacing:.05em;line-height:1.8;
+}
+
+/* F&I STATEMENT */
+.fi-sec{
+  padding:130px 56px;
+  position:relative;z-index:1;
+}
+.fi-inner{max-width:1080px;margin:0 auto}
+.fi-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:100px;align-items:center;
+}
+.fi-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.4rem,4vw,4.2rem);
+  line-height:1.02;letter-spacing:-.03em;
+  color:var(--w);font-weight:400;margin-bottom:22px;
+}
+.fi-h em{font-style:italic;color:var(--w40)}
+.fi-p{
+  font-size:.9rem;color:var(--mu);
+  line-height:1.9;font-weight:300;margin-bottom:36px;
+}
+.fi-p strong{color:var(--tx);font-weight:400}
+.fi-items{border-top:1px solid var(--bd)}
+.fi-item{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:15px 0;border-bottom:1px solid var(--bd);
+}
+.fi-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--w40);margin-top:7px;flex-shrink:0;
+}
+.fi-item-txt{
+  font-size:.84rem;color:var(--mu);
+  font-weight:300;line-height:1.6;
+}
+.fi-item-txt strong{color:var(--tx);font-weight:400}
+.fi-link{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:.84rem;color:var(--w40);text-decoration:none;
+  margin-top:28px;transition:color .25s,gap .25s;
+}
+.fi-link:hover{color:var(--w);gap:16px}
+
+/* F&I MOCK */
+.fi-win{
+  background:var(--s1);border:1px solid var(--bd);
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 32px 64px rgba(0,0,0,.6),0 64px 120px rgba(0,0,0,.35);
+}
+.fi-chrome{
+  background:var(--s2);border-bottom:1px solid var(--bd);
+  padding:12px 18px;display:flex;align-items:center;gap:10px;
+}
+.fi-cdots{display:flex;gap:5px}
+.fi-cdot{width:9px;height:9px;border-radius:50%}
+.fi-cdot.r{background:#2a1818}.fi-cdot.y{background:#252015}.fi-cdot.g{background:#152015}
+.fi-chrome:hover .fi-cdot.r{background:#ff5f57}
+.fi-chrome:hover .fi-cdot.y{background:#febc2e}
+.fi-chrome:hover .fi-cdot.g{background:#28c840}
+.fi-ctitle{font-size:.7rem;color:var(--mu);margin-left:8px}
+.fi-cbadge{
+  margin-left:auto;font-family:'JetBrains Mono',monospace;
+  font-size:.57rem;color:var(--am);
+  background:rgba(240,165,0,.07);
+  padding:3px 9px;border-radius:3px;
+  border:1px solid rgba(240,165,0,.14);
+}
+.fi-body{padding:18px}
+.fi-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.fi-stat{
+  background:var(--s2);border:1px solid var(--bd);
+  border-radius:7px;padding:10px 12px;text-align:center;
+}
+.fi-stat-n{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1rem;font-weight:500;color:var(--w);
+}
+.fi-stat-n.am{color:var(--am)}
+.fi-stat-l{font-size:.6rem;color:var(--mu);margin-top:3px}
+.fi-qlbl{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.55rem;color:var(--mu);
+  letter-spacing:.16em;text-transform:uppercase;margin-bottom:7px;
+}
+.fi-qi{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 11px;border-radius:6px;
+  border:1px solid var(--bd);margin-bottom:4px;
+  background:var(--s1);
+}
+.fi-qi.active{
+  border-color:rgba(240,165,0,.28);
+  background:rgba(240,165,0,.05);
+  animation:qpulse 3s ease-in-out infinite;
+}
+@keyframes qpulse{
+  0%,100%{border-color:rgba(240,165,0,.22)}
+  50%{border-color:rgba(240,165,0,.48)}
+}
+.fi-qi-n{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--dim);width:14px}
+.fi-qi-info{flex:1}
+.fi-qi-name{font-size:.72rem;font-weight:500;color:var(--w);margin-bottom:1px}
+.fi-qi-detail{font-family:'JetBrains Mono',monospace;font-size:.57rem;color:var(--mu)}
+.fi-qi-mgr{font-size:.62rem;color:var(--mu);text-align:right;min-width:68px}
+.fi-qi-mgr span{color:var(--w40)}
+.fi-qi-tag{
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;
+  padding:2px 7px;border-radius:3px;min-width:60px;text-align:center;
+}
+.fi-qi-tag.in{background:rgba(240,165,0,.1);color:var(--am)}
+.fi-qi-tag.wait{background:var(--s3);color:var(--mu)}
+.fi-qi-tag.owed{background:rgba(220,80,80,.1);color:rgba(220,100,100,.85)}
+
+/* sched */
+.fi-sched{
+  margin-top:11px;background:var(--s2);
+  border:1px solid var(--bd);border-radius:7px;padding:11px 13px;
+}
+.fi-slbl{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.53rem;color:var(--mu);
+  letter-spacing:.16em;text-transform:uppercase;margin-bottom:9px;
+}
+.fi-sgrid{display:grid;grid-template-columns:68px repeat(7,1fr);gap:3px;font-size:.55rem}
+.fsh{text-align:center;color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:.53rem;padding:2px 0}
+.fsh.td{color:var(--am)}
+.fsn{color:var(--tx);font-size:.62rem;padding:4px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fsc{text-align:center;padding:3px 1px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.52rem}
+.fsc.on{background:var(--w06);color:var(--w40)}
+.fsc.td{background:rgba(240,165,0,.07);color:var(--am)}
+.fsc.off{color:var(--dim)}
+.fsc.vac{color:rgba(240,165,0,.4)}
+
+
+/* CTA */
+.cta-sec{
+  padding:160px 56px;text-align:center;
+  background:var(--s1);
+  border-top:1px solid var(--bd);
+  position:relative;z-index:1;overflow:hidden;
+}
+.cta-glow{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:700px;height:400px;
+  background:radial-gradient(ellipse,rgba(240,165,0,.04) 0%,transparent 70%);
+  pointer-events:none;animation:ctag 12s ease-in-out infinite;
+}
+@keyframes ctag{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+.cta-inner{position:relative;z-index:2;max-width:620px;margin:0 auto}
+.cta-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:var(--am);
+  letter-spacing:.22em;text-transform:uppercase;
+  display:block;margin-bottom:28px;
+}
+.cta-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3rem,6vw,6.2rem);
+  line-height:.94;letter-spacing:-.035em;
+  color:var(--w);font-weight:400;margin-bottom:24px;
+}
+.cta-h em{font-style:italic;color:var(--w40)}
+.cta-p{
+  font-size:.95rem;color:var(--mu);
+  line-height:1.88;font-weight:300;margin-bottom:44px;
+}
+.cta-btns{
+  display:flex;align-items:center;justify-content:center;
+  gap:16px;flex-wrap:wrap;margin-bottom:22px;
+}
+.cta-fine{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:var(--dim);letter-spacing:.08em;
+}
+
+/* FOOTER */
+footer{
+  background:var(--bg);border-top:1px solid var(--bd);
+  padding:56px 56px 36px;position:relative;z-index:1;
+}
+.foot-inner{max-width:1080px;margin:0 auto}
+.foot-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:48px;margin-bottom:48px;
+}
+.foot-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:16px}
+.foot-mark{
+  width:26px;height:26px;border-radius:6px;background:var(--w);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:800;color:var(--bg);
+}
+.foot-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;font-weight:500;color:var(--w);
+}
+.foot-tag{
+  font-size:.8rem;color:var(--mu);
+  line-height:1.8;font-weight:300;max-width:220px;
+}
+.foot-col-h{
+  font-size:.7rem;font-weight:500;color:var(--w40);
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;
+}
+.foot-col a{
+  display:block;font-size:.8rem;color:var(--mu);
+  text-decoration:none;margin-bottom:10px;
+  transition:color .2s;font-weight:300;
+}
+.foot-col a:hover{color:var(--w)}
+.foot-bottom{
+  border-top:1px solid var(--bd);padding-top:24px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.foot-copy{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.57rem;color:var(--dim);letter-spacing:.06em;
+}
+.foot-legal{display:flex;gap:24px}
+.foot-legal a{
+  font-size:.72rem;color:var(--mu);
+  text-decoration:none;transition:color .2s;
+}
+.foot-legal a:hover{color:var(--w)}
+
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#" class="n-logo">
+    <div class="n-mark">AF</div>
+    <div class="n-name">AutoFlow<span>CRM</span></div>
+  </a>
+  <div class="n-links">
+    <a href="#platform">Platform</a>
+    <a href="#fi">F&amp;I</a>
+    <a href="#floor">Floor</a>
+    <a href="#demo">Demo</a>
+  </div>
+  <div class="n-right">
+    <a href="https://app.aflowcrm.com" class="n-in">Sign in</a>
+    <a href="#demo" class="n-demo">Request Demo</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="eyebrow">
+      <div class="ey-line"></div>
+      <div class="ey-txt">Automotive CRM — Rebuilt from the floor up</div>
+    </div>
+    <h1 class="h1">
+      Three types<br>
+      of customer.<br>
+      <em>One system.</em>
+    </h1>
+    <p class="h-sub">
+      AutoFlow is the only CRM that treats an internet lead, a phone up, and a walk-in as <strong>three completely different customers</strong> — because they are.
+    </p>
+    <div class="h-btns">
+      <a href="#demo" class="btn-w">Request a live demo</a>
+      <a href="#platform" class="btn-o">See what's inside</a>
+      <span class="h-note">No contracts &nbsp;·&nbsp; No setup fees</span>
+    </div>
+
+    <!-- THREE COLUMN WORKFLOW PANEL -->
+    <div class="wf-wrap">
+      <div class="wf-lbl">Source-adaptive workflows — live pipeline view</div>
+      <div class="wf-panel">
+        <div class="wf-bar">
+          <div class="wf-dots">
+            <div class="wf-dot r"></div>
+            <div class="wf-dot y"></div>
+            <div class="wf-dot g"></div>
+          </div>
+          <div class="wf-tabs">
+            <div class="wf-tab on">Workflows</div>
+            <div class="wf-tab">Pipeline</div>
+            <div class="wf-tab">Buckets</div>
+          </div>
+          <div class="wf-hint">AutoFlow CRM · aflowcrm.com</div>
+        </div>
+        <div class="wf-body">
+
+          <!-- Internet -->
+          <div class="wf-col">
+            <div class="wf-col-head">
+              <div class="wf-col-src">Internet Lead</div>
+              <div class="wf-col-ct">7 stages</div>
+            </div>
+            <div class="wf-stages">
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#34d399"></div><span class="wf-name">Lead Received</span><span class="wf-sub">ADF/XML</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#60a5fa"></div><span class="wf-name">Initial Contact</span></div>
+              <div class="wf-stage active"><div class="wf-dot-s" style="background:#a78bfa"></div><span class="wf-name">Appointment Set</span><span class="wf-sub">14</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#f0a500"></div><span class="wf-name">Showroom Visit</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#e879f9"></div><span class="wf-name">Numbers</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#fb923c"></div><span class="wf-name">Negotiation</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#34d399"></div><span class="wf-name">Sold</span></div>
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="wf-col">
+            <div class="wf-col-head">
+              <div class="wf-col-src">Phone Up</div>
+              <div class="wf-col-ct">6 stages</div>
+            </div>
+            <div class="wf-stages">
+              <div class="wf-stage active"><div class="wf-dot-s" style="background:#60a5fa"></div><span class="wf-name">Initial Contact</span><span class="wf-sub">8</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#a78bfa"></div><span class="wf-name">Appointment Set</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#f0a500"></div><span class="wf-name">Showroom Visit</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#e879f9"></div><span class="wf-name">Numbers</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#fb923c"></div><span class="wf-name">Negotiation</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#34d399"></div><span class="wf-name">Sold</span></div>
+            </div>
+          </div>
+
+          <!-- Walk-in -->
+          <div class="wf-col">
+            <div class="wf-col-head">
+              <div class="wf-col-src">Walk-In</div>
+              <div class="wf-col-ct">5 stages</div>
+            </div>
+            <div class="wf-stages">
+              <div class="wf-stage active"><div class="wf-dot-s" style="background:#f0a500"></div><span class="wf-name">Showroom Visit</span><span class="wf-sub">4</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#e879f9"></div><span class="wf-name">Numbers</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#fb923c"></div><span class="wf-name">Negotiation</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#60a5fa"></div><span class="wf-name">Be-Back Appt</span></div>
+              <div class="wf-stage"><div class="wf-dot-s" style="background:#34d399"></div><span class="wf-name">Sold</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<!-- THREE PERSONAS -->
+<section class="tpl-sec reveal" id="platform">
+  <div class="tpl-inner">
+    <div class="tpl-top">
+      <h2 class="tpl-h">
+        One system.<br>
+        <em>Three ways</em><br>
+        to work it.
+      </h2>
+      <p class="tpl-p">
+        Not everyone on your team processes information the same way. AutoFlow ships with three persona-based templates — each one cascades from <strong>admin configuration</strong> down to how each rep sees their day.
+      </p>
+    </div>
+    <div class="tpl-cards">
+      <div class="tc">
+        <div class="tc-n">01 — Template</div>
+        <div class="tc-name">The Analyst</div>
+        <div class="tc-role">Numbers-first. Process-obsessed.</div>
+        <p class="tc-desc">Won't make a move without data behind it. Needs pipeline metrics and lead scoring visible before picking up the phone.</p>
+        <ul class="tc-list">
+          <li>Lead score always front and center</li>
+          <li>Close rate and source performance</li>
+          <li>Rep-level activity tracking</li>
+          <li>Funnel stage conversion view</li>
+          <li>Response time monitoring</li>
+        </ul>
+      </div>
+      <div class="tc">
+        <div class="tc-n">02 — Template</div>
+        <div class="tc-name">The Visualizer</div>
+        <div class="tc-role">Board-thinker. Pattern-reader.</div>
+        <p class="tc-desc">Needs to see the whole floor before working it. Color, layout, and spatial flow communicate more than a list.</p>
+        <ul class="tc-list">
+          <li>Kanban pipeline by stage</li>
+          <li>Customer journey timeline per lead</li>
+          <li>Color-coded status and urgency</li>
+          <li>Live floor overview</li>
+          <li>Visual appointment calendar</li>
+        </ul>
+      </div>
+      <div class="tc">
+        <div class="tc-n">03 — Template</div>
+        <div class="tc-name">The Driver</div>
+        <div class="tc-role">Action-first. Floor-native.</div>
+        <p class="tc-desc">Doesn't want a dashboard — wants to know who to call right now and how to log it fast. Built for closers.</p>
+        <ul class="tc-list">
+          <li>Priority queue — who needs attention now</li>
+          <li>One-tap activity logging</li>
+          <li>Fast follow-up assignment</li>
+          <li>FAB-driven mobile experience</li>
+          <li>Minimal UI, zero friction</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- DIFFERENTIATORS -->
+<section class="diff-sec reveal" id="features">
+  <div class="diff-inner">
+    <div class="s-eye">
+      <div class="s-eye-line"></div>
+      <div class="s-eye-txt">Why AutoFlow</div>
+    </div>
+    <div class="diff-hd">
+      <h2 class="diff-h">
+        Everything your<br>
+        floor needs.<br>
+        <em>Nothing it doesn't.</em>
+      </h2>
+      <p class="diff-p">
+        Generic CRMs were built for software sales teams, then retrofitted for auto dealers. AutoFlow was designed from scratch around <strong>how dealerships actually operate</strong> — every feature exists because a real floor process demanded it.
+      </p>
+    </div>
+    <div class="diff-grid">
+      <div class="dc">
+        <div class="dc-num">01</div>
+        <div class="dc-only">Only in AutoFlow</div>
+        <div class="dc-title">Source-Adaptive<br>Workflows</div>
+        <div class="dc-body">An internet lead and a walk-in are not the same customer. AutoFlow routes each to its own <strong>purpose-built pipeline</strong> with the right stages for how that customer actually behaves.</div>
+        <div class="dc-proof">Internet → 7 stages<br>Phone Up → 6 stages<br>Walk-In → 5 stages</div>
+      </div>
+      <div class="dc">
+        <div class="dc-num">02</div>
+        <div class="dc-only">Only in AutoFlow</div>
+        <div class="dc-title">Native F&amp;I<br>Operations</div>
+        <div class="dc-body">Live deal queue, rotation schedule, skip tracking, clock-in/out, and a full contract log. <strong>No other CRM manages F&amp;I.</strong> You've been doing this on a whiteboard.</div>
+        <div class="dc-proof">Queue · Rotation · Skip log<br>Contract log · Customer visits</div>
+      </div>
+      <div class="dc">
+        <div class="dc-num">03</div>
+        <div class="dc-only">Only in AutoFlow</div>
+        <div class="dc-title">Live Floor<br>Intelligence</div>
+        <div class="dc-body">Real-time test drive timers with plate tracking, showroom check-in with auto-timing, overdue alerts the moment a car runs long. <strong>Know where every vehicle is — right now.</strong></div>
+        <div class="dc-proof">Live timers · Plate inventory<br>DL capture · Overdue alerts</div>
+      </div>
+      <div class="dc">
+        <div class="dc-num">04</div>
+        <div class="dc-only">Automation</div>
+        <div class="dc-title">Cadence<br>Engine</div>
+        <div class="dc-body">Multi-step follow-up sequences that pause when a customer responds, resume when they go dark, and surface the <strong>highest-priority contacts first</strong>. Not reminders — logic.</div>
+        <div class="dc-proof">Auto-pause · Priority weights<br>5 built-in templates</div>
+      </div>
+      <div class="dc">
+        <div class="dc-num">05</div>
+        <div class="dc-only">Deal Tools</div>
+        <div class="dc-title">Desking &amp;<br>Quick Proposals</div>
+        <div class="dc-body">Full deal calculator with trade, tax, and payments across every term — plus a proposal you can <strong>text or email in one tap</strong> from the CRM in under 30 seconds.</div>
+        <div class="dc-proof">36–84mo · Cash · Finance · Lease<br>Text or email in one tap</div>
+      </div>
+      <div class="dc">
+        <div class="dc-num">06</div>
+        <div class="dc-only">Smart Distribution</div>
+        <div class="dc-title">AI Lead<br>Assignment</div>
+        <div class="dc-body">Scores every rep in real time — workload, close rate, source familiarity, returning customer history. <strong>Smart Match assigns leads instantly</strong> the moment they hit the webhook.</div>
+        <div class="dc-proof">4 modes · Smart Match AI<br>Round Robin · Manager Queue</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- F&I SECTION -->
+<section class="fi-sec reveal" id="fi">
+  <div class="fi-inner">
+    <div class="fi-grid">
+      <div>
+        <div class="s-eye" style="margin-bottom:22px">
+          <div class="s-eye-line"></div>
+          <div class="s-eye-txt">F&amp;I Operations</div>
+        </div>
+        <h2 class="fi-h">
+          You've been running<br>
+          F&amp;I on a whiteboard.<br>
+          <em>We fixed that.</em>
+        </h2>
+        <p class="fi-p">
+          No other CRM has a native F&amp;I module. AutoFlow gives finance managers a <strong>live deal queue with automatic rotation</strong>, weekly scheduling, and a full contract log — all synced to your sales floor in real time.
+        </p>
+        <div class="fi-items">
+          <div class="fi-item"><div class="fi-dot"></div><div class="fi-item-txt"><strong>Live deal queue</strong> — who's in office, who's waiting, who's next</div></div>
+          <div class="fi-item"><div class="fi-dot"></div><div class="fi-item-txt"><strong>Rotation schedule</strong> — weekly grid with clock-in/out per manager</div></div>
+          <div class="fi-item"><div class="fi-dot"></div><div class="fi-item-txt"><strong>Skip &amp; owed tracking</strong> — every skip logged, owed deals surfaced automatically</div></div>
+          <div class="fi-item"><div class="fi-dot"></div><div class="fi-item-txt"><strong>Contract log</strong> — every deal with products sold, manager, and notes</div></div>
+        </div>
+        <a href="#demo" class="fi-link">See the F&amp;I module live →</a>
+      </div>
+      <div class="fi-win">
+        <div class="fi-chrome">
+          <div class="fi-cdots"><div class="fi-cdot r"></div><div class="fi-cdot y"></div><div class="fi-cdot g"></div></div>
+          <div class="fi-ctitle">F&amp;I — Deal Queue</div>
+          <div class="fi-cbadge">2 waiting</div>
+        </div>
+        <div class="fi-body">
+          <div class="fi-stats">
+            <div class="fi-stat"><div class="fi-stat-n am">Rivera</div><div class="fi-stat-l">Next up</div></div>
+            <div class="fi-stat"><div class="fi-stat-n">2</div><div class="fi-stat-l">Waiting</div></div>
+            <div class="fi-stat"><div class="fi-stat-n" style="color:rgba(220,100,100,.8)">1</div><div class="fi-stat-l">Owed</div></div>
+          </div>
+          <div class="fi-qlbl">Queue</div>
+          <div class="fi-qi active">
+            <div class="fi-qi-n">1</div>
+            <div class="fi-qi-info"><div class="fi-qi-name">Marcus Johnson · D-1042</div><div class="fi-qi-detail">#25T1820 · New · Carlos V.</div></div>
+            <div class="fi-qi-mgr">F&amp;I: <span>Chen</span></div>
+            <div class="fi-qi-tag in">IN OFFICE</div>
+          </div>
+          <div class="fi-qi">
+            <div class="fi-qi-n">2</div>
+            <div class="fi-qi-info"><div class="fi-qi-name">Sarah &amp; Tom Reyes · D-1043</div><div class="fi-qi-detail">#24H9913 · Used · Jamie L.</div></div>
+            <div class="fi-qi-mgr">Next: <span>Rivera</span></div>
+            <div class="fi-qi-tag wait">WAITING</div>
+          </div>
+          <div class="fi-qi">
+            <div class="fi-qi-n">3</div>
+            <div class="fi-qi-info"><div class="fi-qi-name">Derek Okonkwo · D-1044</div><div class="fi-qi-detail">#25H0044 · New · Mia T.</div></div>
+            <div class="fi-qi-mgr">Owed: <span>Rivera</span></div>
+            <div class="fi-qi-tag owed">OWED</div>
+          </div>
+          <div class="fi-sched">
+            <div class="fi-slbl">Weekly Schedule</div>
+            <div class="fi-sgrid">
+              <div></div>
+              <div class="fsh">Su</div><div class="fsh">Mo</div><div class="fsh td">Tu</div>
+              <div class="fsh">We</div><div class="fsh">Th</div><div class="fsh">Fr</div><div class="fsh">Sa</div>
+              <div class="fsn">Chen</div>
+              <div class="fsc off">—</div><div class="fsc on">9-6</div><div class="fsc td">9-6</div>
+              <div class="fsc on">9-6</div><div class="fsc off">—</div><div class="fsc on">10-7</div><div class="fsc on">10-7</div>
+              <div class="fsn">Rivera</div>
+              <div class="fsc on">10-7</div><div class="fsc off">—</div><div class="fsc td">10-7</div>
+              <div class="fsc on">10-7</div><div class="fsc on">10-7</div><div class="fsc off">—</div><div class="fsc on">10-7</div>
+              <div class="fsn">Patel</div>
+              <div class="fsc on">9-6</div><div class="fsc on">9-6</div><div class="fsc vac">VAC</div>
+              <div class="fsc off">—</div><div class="fsc on">9-6</div><div class="fsc on">9-6</div><div class="fsc off">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- CTA -->
+<section class="cta-sec reveal" id="demo">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <span class="cta-tag">Get started</span>
+    <h2 class="cta-h">
+      See what your floor<br>looks like when it<br><em>actually has a system.</em>
+    </h2>
+    <p class="cta-p">
+      AutoFlow is purpose-built for automotive dealerships. Request a live demo and we'll walk you through exactly how it fits your floor — no generic pitch, no padded feature lists.
+    </p>
+    <div class="cta-btns">
+      <a href="mailto:hello@aflowcrm.com" class="btn-w">Request a live demo</a>
+      <a href="https://app.aflowcrm.com" class="btn-o">Sign in to your account</a>
+    </div>
+    <div class="cta-fine">No contracts &nbsp;·&nbsp; No setup fees &nbsp;·&nbsp; Built in Nevada, USA</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-top">
+      <div>
+        <a href="#" class="foot-logo">
+          <div class="foot-mark">AF</div>
+          <div class="foot-name">AutoFlow CRM</div>
+        </a>
+        <p class="foot-tag">The operating system for modern automotive dealerships. Built for the floor, not the boardroom.</p>
+      </div>
+      <div class="foot-col">
+        <div class="foot-col-h">Platform</div>
+        <a href="#platform">Workflows</a>
+        <a href="#platform">Personas</a>
+        <a href="#features">F&amp;I Operations</a>
+        <a href="#features">Floor Intelligence</a>
+        <a href="#features">Cadence Engine</a>
+        <a href="#features">Desking Tools</a>
+      </div>
+      <div class="foot-col">
+        <div class="foot-col-h">Product</div>
+        <a href="#demo">Request Demo</a>
+        <a href="https://app.aflowcrm.com">Sign In</a>
+        <a href="mailto:hello@aflowcrm.com">Contact</a>
+      </div>
+      <div class="foot-col">
+        <div class="foot-col-h">Legal</div>
+        <a href="/terms">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="mailto:support@aflowcrm.com">Support</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2025 AUTOFLOW CRM LLC &nbsp;·&nbsp; NEVADA &nbsp;·&nbsp; AFLOWCRM.COM</div>
+      <div class="foot-legal">
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a href="mailto:hello@aflowcrm.com">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+const ro = new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+</script>
+</body>
+</html>
