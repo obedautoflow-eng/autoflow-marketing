@@ -133,21 +133,47 @@ input{font-family:'Outfit',sans-serif}
         </div>
         <div>
           <div style="font-size:12px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Deal Pad</div>
-          <h3 style="font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:14px;color:#fff">Numbers in seconds, not minutes</h3>
-          <p style="font-size:15px;color:#9ca3af;line-height:1.7;margin-bottom:18px">Lease, finance, cash, and Ford Flex Buy — all on one screen. A 5x5 payment matrix lets your desk manager pencil any deal in seconds. Click a cell, send a proposal, track when the customer opens it.</p>
+          <h3 style="font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:14px;color:#fff">Your entire month at a glance</h3>
+          <p style="font-size:15px;color:#9ca3af;line-height:1.7;margin-bottom:18px">Every deal from green dot to funded — tracked, audited, and visible. KPI dashboards, daily unit grids, rep pace projections, and deal status pipeline. The back-office tool your accounting team wishes they had.</p>
           <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0"></div>Payment matrix: every term x down payment combo</div>
-            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0"></div>Multi-option proposals (cash + finance + lease on one pencil)</div>
-            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0"></div>Customer-facing proposal page with real-time recalculation</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0"></div>Deal status pipeline: green dot through funded</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0"></div>Daily unit grid with rep-by-rep pace tracking</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0"></div>Month-end projections and source breakdown analytics</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- AI Assistant (reversed) -->
+    <!-- Desking (reversed) -->
     <div class="fade-in" style="margin-bottom:72px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;direction:rtl">
         <div style="direction:ltr">
+          <div style="border-radius:14px;border:1px solid rgba(255,255,255,.07);overflow:hidden;background:#0f1117;box-shadow:0 20px 80px rgba(245,158,11,.08),0 4px 20px rgba(0,0,0,.4)">
+            <div style="padding:8px 14px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:5px;align-items:center">
+              <div style="display:flex;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#eab308aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#22c55eaa"></div></div>
+              <div style="flex:1;text-align:center;font-size:10px;color:#6b7280;font-weight:500">Velance — Desking</div>
+              <div style="width:36px"></div>
+            </div>
+            <div style="padding:14px" id="desking-mock"></div>
+          </div>
+        </div>
+        <div style="direction:ltr">
+          <div style="font-size:12px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Desking</div>
+          <h3 style="font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:14px;color:#fff">Numbers in seconds, not minutes</h3>
+          <p style="font-size:15px;color:#9ca3af;line-height:1.7;margin-bottom:18px">Lease, finance, cash, and Ford Flex Buy — all on one screen. A 5x5 payment matrix lets your desk manager pencil any deal in seconds. Click a cell, send a proposal, track when the customer opens it.</p>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div>Payment matrix: every term x down payment combo</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div>Multi-option proposals (cash + finance + lease on one pencil)</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div>Customer-facing proposal page with real-time recalculation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Assistant -->
+    <div class="fade-in" style="margin-bottom:72px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+        <div>
           <div style="border-radius:14px;border:1px solid rgba(255,255,255,.07);overflow:hidden;background:#0f1117;box-shadow:0 20px 80px rgba(139,92,246,.08),0 4px 20px rgba(0,0,0,.4)">
             <div style="padding:8px 14px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:5px;align-items:center">
               <div style="display:flex;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#eab308aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#22c55eaa"></div></div>
@@ -157,7 +183,7 @@ input{font-family:'Outfit',sans-serif}
             <div style="padding:14px" id="ai-mock"></div>
           </div>
         </div>
-        <div style="direction:ltr">
+        <div>
           <div style="font-size:12px;font-weight:700;color:#8b5cf6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">AI Assistant</div>
           <h3 style="font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:14px;color:#fff">Ask anything. Get answers.</h3>
           <p style="font-size:15px;color:#9ca3af;line-height:1.7;margin-bottom:18px">A real AI that writes its own SQL queries, searches your leads, and generates charts — not a chatbot with canned responses. Ask complex questions in plain English and get actionable insights.</p>
@@ -170,10 +196,10 @@ input{font-family:'Outfit',sans-serif}
       </div>
     </div>
 
-    <!-- Contract Log -->
+    <!-- Contract Log (reversed) -->
     <div class="fade-in">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
-        <div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;direction:rtl">
+        <div style="direction:ltr">
           <div style="border-radius:14px;border:1px solid rgba(255,255,255,.07);overflow:hidden;background:#0f1117;box-shadow:0 20px 80px rgba(34,197,94,.08),0 4px 20px rgba(0,0,0,.4)">
             <div style="padding:8px 14px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:5px;align-items:center">
               <div style="display:flex;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#eab308aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#22c55eaa"></div></div>
@@ -183,7 +209,7 @@ input{font-family:'Outfit',sans-serif}
             <div style="padding:14px" id="contractlog-mock"></div>
           </div>
         </div>
-        <div>
+        <div style="direction:ltr">
           <div style="font-size:12px;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">F&I Contract Log</div>
           <h3 style="font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:14px;color:#fff">The deal queue nobody else has</h3>
           <p style="font-size:15px;color:#9ca3af;line-height:1.7;margin-bottom:18px">Track every deal from signed buyer's order through final contracts. Rotation scheduling, skip tracking, and PVR reporting — built into the CRM where it belongs, not on a whiteboard.</p>
@@ -478,16 +504,39 @@ document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
   });
 })();
 
-// Deal Pad
+// Deal Pad (back-office deal log)
+(function() {
+  const kpis = [{label:'Total Deals',val:'47',color:'#3b82f6'},{label:'New',val:'28',color:'#22c55e'},{label:'Used',val:'19',color:'#f59e0b'},{label:'Funded',val:'38',color:'#8b5cf6'}];
+  const deals = [
+    {name:'Tyler Brooks',veh:'2024 Mustang GT',type:'New',status:'Funded',sc:'#22c55e',rep:'Jake M.',fi:'Mike D.'},
+    {name:'Amanda Ross',veh:'2024 Edge ST-Line',type:'New',status:'Booked',sc:'#3b82f6',rep:'Lisa K.',fi:'Sarah K.'},
+    {name:'Marcus Johnson',veh:'2022 F-150 Lariat',type:'Used',status:'Pending',sc:'#f59e0b',rep:'Jake M.',fi:'\u2014'}
+  ];
+  let html = '<div style="display:flex;gap:5px;margin-bottom:8px">';
+  kpis.forEach(k => {
+    html += `<div style="flex:1;padding:6px 7px;border-radius:6px;background:#161924;border:1px solid rgba(255,255,255,.07)"><div style="font-size:8px;color:#6b7280;margin-bottom:2px">${k.label}</div><div style="font-size:16px;font-weight:800;color:${k.color}">${k.val}</div></div>`;
+  });
+  html += '</div>';
+  html += '<div style="border-radius:6px;border:1px solid rgba(255,255,255,.07);overflow:hidden;font-size:9px">';
+  html += '<div style="display:grid;grid-template-columns:1.2fr 1.3fr .5fr .6fr .7fr .7fr;padding:4px 8px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07);font-weight:600;color:#6b7280"><span>Customer</span><span>Vehicle</span><span>Type</span><span>Status</span><span>Rep</span><span>F&I</span></div>';
+  deals.forEach((d,i) => {
+    html += `<div style="display:grid;grid-template-columns:1.2fr 1.3fr .5fr .6fr .7fr .7fr;padding:5px 8px;border-bottom:${i<deals.length-1?'1px solid rgba(255,255,255,.07)':'none'};align-items:center"><span style="color:#fff;font-weight:600">${d.name}</span><span style="color:#9ca3af">${d.veh}</span><span style="color:#9ca3af">${d.type}</span><span style="display:flex;align-items:center;gap:3px"><div style="width:5px;height:5px;border-radius:50%;background:${d.sc}"></div><span style="color:#9ca3af">${d.status}</span></span><span style="color:#6b7280">${d.rep}</span><span style="color:#6b7280">${d.fi}</span></div>`;
+  });
+  html += '</div>';
+  html += '<div style="margin-top:6px;display:flex;gap:4px"><div style="flex:1;padding:5px 8px;border-radius:5px;background:#161924;border:1px solid rgba(255,255,255,.07);font-size:9px"><div style="color:#6b7280;font-size:8px">Month Pace</div><div style="color:#22c55e;font-weight:700">47 units \u00b7 2.35/day</div></div><div style="flex:1;padding:5px 8px;border-radius:5px;background:#161924;border:1px solid rgba(255,255,255,.07);font-size:9px"><div style="color:#6b7280;font-size:8px">Projected</div><div style="color:#3b82f6;font-weight:700">52 units @ 20 days</div></div></div>';
+  document.getElementById('dealpad-mock').innerHTML = html;
+})();
+
+// Desking (payment calculator)
 (function() {
   const terms = [36,48,60,72,84], downs = ['$0','$1k','$2k','$3k','$5k'];
   const payments = [[1178,1150,1122,1094,1038],[903,882,861,840,798],[739,722,705,688,653],[631,617,603,589,561],[554,542,530,518,493]];
   let html = '<div style="display:flex;gap:4px;margin-bottom:8px">';
   ['Finance','Lease','Cash','Flex Buy'].forEach((t,i) => {
-    html += `<div style="padding:4px 9px;border-radius:5px;font-size:9px;font-weight:700;background:${i===0?'rgba(59,130,246,.12)':'transparent'};color:${i===0?'#3b82f6':'#6b7280'};border:1px solid ${i===0?'rgba(59,130,246,.25)':'rgba(255,255,255,.07)'}">${t}</div>`;
+    html += `<div style="padding:4px 9px;border-radius:5px;font-size:9px;font-weight:700;background:${i===0?'rgba(245,158,11,.12)':'transparent'};color:${i===0?'#f59e0b':'#6b7280'};border:1px solid ${i===0?'rgba(245,158,11,.25)':'rgba(255,255,255,.07)'}">${t}</div>`;
   });
   html += '</div>';
-  html += '<div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:10px"><span style="font-weight:600;color:#fff">2024 Ford F-150 XLT</span><span style="color:#3b82f6;font-weight:600">$42,500 · 6.49% APR</span></div>';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:10px"><span style="font-weight:600;color:#fff">2024 Ford F-150 XLT</span><span style="color:#f59e0b;font-weight:600">$42,500 \u00b7 6.49% APR</span></div>';
   html += '<div style="border-radius:7px;border:1px solid rgba(255,255,255,.07);overflow:hidden;font-size:9px;font-family:monospace">';
   html += '<div style="display:grid;grid-template-columns:40px repeat(5,1fr);background:#161924;border-bottom:1px solid rgba(255,255,255,.07)"><div style="padding:4px 5px;color:#6b7280;font-size:8px">Down</div>';
   downs.forEach(d => { html += `<div style="padding:4px 3px;color:#6b7280;text-align:center;font-size:8px">${d}</div>`; });
@@ -496,13 +545,13 @@ document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
     html += `<div style="display:grid;grid-template-columns:40px repeat(5,1fr);border-bottom:${ti<4?'1px solid rgba(255,255,255,.07)':'none'}"><div style="padding:5px;color:#9ca3af;font-weight:600;font-size:9px">${t}mo</div>`;
     payments[ti].forEach((p,di) => {
       const sel = ti===2 && di===2;
-      html += `<div style="padding:5px 3px;text-align:center;color:${sel?'#fff':'#9ca3af'};font-weight:${sel?'700':'400'};background:${sel?'rgba(59,130,246,.15)':'transparent'};border:${sel?'1px solid rgba(59,130,246,.4)':'1px solid transparent'};border-radius:${sel?'3px':'0'}">$${p}</div>`;
+      html += `<div style="padding:5px 3px;text-align:center;color:${sel?'#fff':'#9ca3af'};font-weight:${sel?'700':'400'};background:${sel?'rgba(245,158,11,.15)':'transparent'};border:${sel?'1px solid rgba(245,158,11,.4)':'1px solid transparent'};border-radius:${sel?'3px':'0'}">$${p}</div>`;
     });
     html += '</div>';
   });
   html += '</div>';
   html += '<div style="margin-top:6px;display:flex;justify-content:space-between;font-size:9px;color:#6b7280"><span>Selected: 60mo / $2,000 down</span><span style="color:#22c55e;font-weight:600">$705/mo</span></div>';
-  document.getElementById('dealpad-mock').innerHTML = html;
+  document.getElementById('desking-mock').innerHTML = html;
 })();
 
 // AI Mock
