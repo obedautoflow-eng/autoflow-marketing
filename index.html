@@ -3,909 +3,194 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoFlow CRM — Built for the Automotive Floor</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Velance CRM — The CRM That Actually Sells Cars</title>
+<meta name="description" content="AI-powered automotive CRM with autonomous agents, service drive alerts, and built-in desking. Built by a sales floor veteran who ran a 35-person internet department.">
+<meta property="og:title" content="Velance CRM — The CRM That Actually Sells Cars">
+<meta property="og:description" content="AI agents that respond to leads in seconds, follow up on autopilot, and surface deals you'd miss.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aflowcrm.com">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#080809;
-  --s1:#0d0d0f;
-  --s2:#111114;
-  --s3:#161619;
-  --s4:#1c1c20;
-  --bd:#222228;
-  --bd2:#2d2d34;
-  --w:#f0f0f3;
-  --w60:rgba(240,240,243,.6);
-  --w40:rgba(240,240,243,.4);
-  --w20:rgba(240,240,243,.2);
-  --w10:rgba(240,240,243,.1);
-  --w06:rgba(240,240,243,.06);
-  --w03:rgba(240,240,243,.03);
-  --tx:#aaaab4;
-  --mu:#505058;
-  --dim:#252530;
-  --am:#f0a500;
-  --am-lo:rgba(240,165,0,.07);
-}
+*{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--tx);
-  font-family:'DM Sans',sans-serif;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-  line-height:1.6;
-}
-body::after{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:100;opacity:.022;mix-blend-mode:overlay;
-}
-
-/* NAV */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  display:flex;align-items:center;justify-content:space-between;
-  height:66px;padding:0 56px;
-  transition:background .5s,border-color .5s;
-}
-nav.scrolled{
-  background:rgba(8,8,9,.93);
-  border-bottom:1px solid var(--bd);
-  backdrop-filter:blur(20px);
-}
-.n-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
-.n-mark{
-  width:30px;height:30px;border-radius:7px;background:var(--w);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:10px;color:var(--bg);flex-shrink:0;
-}
-.n-name{
-  font-family:'Cormorant Garamond',serif;
-  font-size:1.2rem;font-weight:500;color:var(--w);letter-spacing:-.01em;
-}
-.n-name span{
-  display:block;font-family:'JetBrains Mono',monospace;
-  font-size:.5rem;color:var(--mu);letter-spacing:.22em;
-  text-transform:uppercase;margin-top:1px;font-weight:400;
-}
-.n-links{
-  display:flex;gap:40px;
-  position:absolute;left:50%;transform:translateX(-50%);
-}
-.n-links a{
-  font-size:.8rem;color:var(--mu);text-decoration:none;
-  transition:color .2s;letter-spacing:.01em;
-}
-.n-links a:hover{color:var(--w)}
-.n-right{display:flex;gap:14px;align-items:center}
-.n-in{font-size:.8rem;color:var(--mu);text-decoration:none;transition:color .2s}
-.n-in:hover{color:var(--w)}
-.n-demo{
-  background:var(--w);color:var(--bg);
-  padding:9px 22px;border-radius:5px;
-  font-size:.8rem;font-weight:600;text-decoration:none;
-  transition:opacity .2s,transform .15s;
-}
-.n-demo:hover{opacity:.88;transform:translateY(-1px)}
-
-/* HERO */
-.hero{
-  min-height:100vh;
-  display:flex;flex-direction:column;justify-content:center;
-  padding:150px 56px 100px;
-  position:relative;
-}
-.hero-grid{
-  position:absolute;inset:0;
-  background-image:
-    linear-gradient(var(--w03) 1px,transparent 1px),
-    linear-gradient(90deg,var(--w03) 1px,transparent 1px);
-  background-size:88px 88px;
-  mask-image:radial-gradient(ellipse 70% 50% at 50% 0%,black,transparent);
-  pointer-events:none;z-index:0;
-}
-.hero-inner{
-  position:relative;z-index:1;
-  max-width:1080px;margin:0 auto;width:100%;
-}
-
-.eyebrow{
-  display:inline-flex;align-items:center;gap:12px;
-  margin-bottom:32px;
-  opacity:0;animation:rise .7s .05s ease forwards;
-}
-.ey-line{width:24px;height:1px;background:var(--am)}
-.ey-txt{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.58rem;color:var(--am);
-  letter-spacing:.22em;text-transform:uppercase;
-}
-
-.h1{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(4.2rem,9vw,9.5rem);
-  line-height:.91;letter-spacing:-.035em;
-  color:var(--w);font-weight:400;
-  margin-bottom:36px;
-  opacity:0;animation:rise .9s .15s ease forwards;
-}
-.h1 em{font-style:italic;color:var(--w40)}
-
-.h-sub{
-  font-size:1.05rem;color:var(--mu);
-  max-width:440px;line-height:1.9;font-weight:300;
-  opacity:0;animation:rise .9s .28s ease forwards;
-}
-.h-sub strong{color:var(--tx);font-weight:400}
-
-.h-btns{
-  margin-top:40px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-  opacity:0;animation:rise .9s .38s ease forwards;
-}
-.btn-w{
-  background:var(--w);color:var(--bg);
-  padding:13px 30px;border-radius:5px;
-  font-size:.86rem;font-weight:600;text-decoration:none;
-  transition:opacity .2s,transform .15s;
-}
-.btn-w:hover{opacity:.88;transform:translateY(-2px)}
-.btn-o{
-  background:transparent;color:var(--w40);
-  padding:13px 30px;border-radius:5px;
-  font-size:.86rem;font-weight:400;text-decoration:none;
-  border:1px solid var(--bd2);transition:color .2s,border-color .2s;
-}
-.btn-o:hover{color:var(--w);border-color:var(--w20)}
-.h-note{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.6rem;color:var(--dim);letter-spacing:.06em;
-}
-
-@keyframes rise{
-  from{opacity:0;transform:translateY(16px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.reveal{
-  opacity:0;transform:translateY(20px);
-  transition:opacity .8s ease,transform .8s ease;
-}
-.reveal.on{opacity:1;transform:translateY(0)}
-
-/* WORKFLOW PANEL */
-.wf-wrap{
-  margin-top:72px;
-  opacity:0;animation:rise 1s .5s ease forwards;
-}
-.wf-lbl{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.58rem;color:var(--mu);
-  letter-spacing:.18em;text-transform:uppercase;
-  margin-bottom:14px;
-  display:flex;align-items:center;gap:12px;
-}
-.wf-lbl::before{content:'';display:block;width:20px;height:1px;background:var(--bd2)}
-
-.wf-panel{
-  background:var(--s1);
-  border:1px solid var(--bd);
-  border-radius:14px;overflow:hidden;
-  max-width:960px;
-  box-shadow:
-    0 0 0 1px rgba(240,240,243,.025),
-    0 48px 100px rgba(0,0,0,.7),
-    0 96px 200px rgba(0,0,0,.4),
-    inset 0 1px 0 rgba(240,240,243,.04);
-}
-.wf-bar{
-  background:var(--s2);border-bottom:1px solid var(--bd);
-  padding:13px 20px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.wf-dots{display:flex;gap:6px}
-.wf-dot{width:10px;height:10px;border-radius:50%}
-.wf-dot.r{background:#ff5f57}
-.wf-dot.y{background:#febc2e}
-.wf-dot.g{background:#28c840}
-.wf-tabs{display:flex;gap:2px}
-.wf-tab{
-  padding:5px 14px;border-radius:5px;
-  font-size:.7rem;color:var(--mu);cursor:default;
-}
-.wf-tab.on{background:var(--w06);color:var(--w60)}
-.wf-hint{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.58rem;color:var(--dim);letter-spacing:.08em;
-}
-
-.wf-body{
-  padding:22px;
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  gap:14px;
-}
-.wf-col{
-  border:1px solid var(--bd);
-  border-radius:9px;overflow:hidden;
-}
-.wf-col-head{
-  padding:11px 14px;
-  background:var(--s2);
-  border-bottom:1px solid var(--bd);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.wf-col-src{font-size:.74rem;font-weight:500;color:var(--w60)}
-.wf-col-ct{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.6rem;color:var(--mu);
-}
-.wf-stages{padding:8px}
-.wf-stage{
-  padding:8px 11px;border-radius:6px;
-  display:flex;align-items:center;gap:9px;
-  margin-bottom:2px;cursor:default;
-  transition:background .15s;
-}
-.wf-stage:hover{background:var(--w06)}
-.wf-stage.active{
-  background:var(--w06);
-  border:1px solid var(--bd2);
-}
-.wf-dot-s{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.wf-name{font-size:.72rem;color:var(--tx);flex:1}
-.wf-stage.active .wf-name{color:var(--w60)}
-.wf-sub{font-size:.62rem;color:var(--mu)}
-
-
-/* PERSONAS */
-.tpl-sec{padding:130px 56px;background:var(--bg);position:relative;z-index:1}
-.tpl-inner{max-width:1080px;margin:0 auto}
-.tpl-top{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:56px}
-.tpl-h{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,5vw,5rem);line-height:.96;letter-spacing:-.035em;color:var(--w);font-weight:400;margin-bottom:0}
-.tpl-h em{font-style:italic;color:var(--w40)}
-.tpl-p{font-size:.92rem;color:var(--mu);line-height:1.88;font-weight:300;align-self:end}
-.tpl-p strong{color:var(--tx);font-weight:400}
-
-.tpl-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
-.tc{background:var(--s1);padding:40px 32px;transition:background .25s}
-.tc:hover{background:var(--s2)}
-.tc-n{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--dim);letter-spacing:.14em;margin-bottom:24px}
-.tc-name{font-family:'Cormorant Garamond',serif;font-size:1.65rem;color:var(--w);letter-spacing:-.02em;line-height:1.1;margin-bottom:5px;font-weight:400}
-.tc-role{font-size:.76rem;color:var(--mu);font-style:italic;margin-bottom:20px}
-.tc-desc{font-size:.82rem;color:var(--mu);line-height:1.72;font-weight:300;margin-bottom:28px}
-.tc-list{list-style:none;display:flex;flex-direction:column;gap:10px}
-.tc-list li{font-size:.76rem;color:var(--mu);display:flex;align-items:flex-start;gap:12px;line-height:1.4}
-.tc-list li::before{content:'';display:block;width:14px;height:1px;background:var(--bd2);margin-top:8px;flex-shrink:0}
-
-
-/* DIFFERENTIATORS */
-.diff-sec{
-  padding:130px 56px;
-  background:var(--s1);
-  border-top:1px solid var(--bd);
-  border-bottom:1px solid var(--bd);
-  position:relative;z-index:1;
-}
-.diff-inner{max-width:1080px;margin:0 auto}
-
-.s-eye{
-  display:flex;align-items:center;gap:12px;
-  margin-bottom:20px;
-}
-.s-eye-line{width:24px;height:1px;background:var(--am)}
-.s-eye-txt{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.58rem;color:var(--am);
-  letter-spacing:.22em;text-transform:uppercase;
-}
-
-.diff-hd{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:64px;align-items:end;margin-bottom:72px;
-}
-.diff-h{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2.6rem,4.5vw,4.8rem);
-  line-height:.97;letter-spacing:-.035em;
-  color:var(--w);font-weight:400;
-}
-.diff-h em{font-style:italic;color:var(--w40)}
-.diff-p{
-  font-size:.92rem;color:var(--mu);
-  line-height:1.88;font-weight:300;align-self:end;
-}
-.diff-p strong{color:var(--tx);font-weight:400}
-
-.diff-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--bd);
-  border:1px solid var(--bd);border-radius:12px;overflow:hidden;
-}
-.dc{
-  background:var(--bg);padding:40px 32px;
-  position:relative;transition:background .25s;overflow:hidden;
-}
-.dc:hover{background:var(--s1)}
-.dc::after{
-  content:'';position:absolute;
-  top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--w20),transparent);
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .5s ease;
-}
-.dc:hover::after{transform:scaleX(1)}
-.dc-num{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.58rem;color:var(--dim);
-  letter-spacing:.12em;margin-bottom:20px;
-}
-.dc-only{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.54rem;color:var(--am);
-  letter-spacing:.16em;text-transform:uppercase;
-  margin-bottom:10px;
-  opacity:0;transition:opacity .3s;
-}
-.dc:hover .dc-only{opacity:1}
-.dc-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:1.5rem;color:var(--w);
-  font-weight:400;line-height:1.15;
-  letter-spacing:-.02em;margin-bottom:12px;
-}
-.dc-body{
-  font-size:.82rem;color:var(--mu);
-  line-height:1.78;font-weight:300;
-}
-.dc-body strong{color:var(--tx);font-weight:400}
-.dc-proof{
-  margin-top:18px;padding-top:18px;
-  border-top:1px solid var(--bd);
-  font-family:'JetBrains Mono',monospace;
-  font-size:.57rem;color:var(--dim);
-  letter-spacing:.05em;line-height:1.8;
-}
-
-/* F&I STATEMENT */
-.fi-sec{
-  padding:130px 56px;
-  position:relative;z-index:1;
-}
-.fi-inner{max-width:1080px;margin:0 auto}
-.fi-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:100px;align-items:center;
-}
-.fi-h{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2.4rem,4vw,4.2rem);
-  line-height:1.02;letter-spacing:-.03em;
-  color:var(--w);font-weight:400;margin-bottom:22px;
-}
-.fi-h em{font-style:italic;color:var(--w40)}
-.fi-p{
-  font-size:.9rem;color:var(--mu);
-  line-height:1.9;font-weight:300;margin-bottom:36px;
-}
-.fi-p strong{color:var(--tx);font-weight:400}
-.fi-items{border-top:1px solid var(--bd)}
-.fi-item{
-  display:flex;align-items:flex-start;gap:16px;
-  padding:15px 0;border-bottom:1px solid var(--bd);
-}
-.fi-dot{
-  width:5px;height:5px;border-radius:50%;
-  background:var(--w40);margin-top:7px;flex-shrink:0;
-}
-.fi-item-txt{
-  font-size:.84rem;color:var(--mu);
-  font-weight:300;line-height:1.6;
-}
-.fi-item-txt strong{color:var(--tx);font-weight:400}
-.fi-link{
-  display:inline-flex;align-items:center;gap:10px;
-  font-size:.84rem;color:var(--w40);text-decoration:none;
-  margin-top:28px;transition:color .25s,gap .25s;
-}
-.fi-link:hover{color:var(--w);gap:16px}
-
-/* F&I MOCK */
-.fi-win{
-  background:var(--s1);border:1px solid var(--bd);
-  border-radius:12px;overflow:hidden;
-  box-shadow:0 32px 64px rgba(0,0,0,.6),0 64px 120px rgba(0,0,0,.35);
-}
-.fi-chrome{
-  background:var(--s2);border-bottom:1px solid var(--bd);
-  padding:12px 18px;display:flex;align-items:center;gap:10px;
-}
-.fi-cdots{display:flex;gap:5px}
-.fi-cdot{width:9px;height:9px;border-radius:50%}
-.fi-cdot.r{background:#2a1818}.fi-cdot.y{background:#252015}.fi-cdot.g{background:#152015}
-.fi-chrome:hover .fi-cdot.r{background:#ff5f57}
-.fi-chrome:hover .fi-cdot.y{background:#febc2e}
-.fi-chrome:hover .fi-cdot.g{background:#28c840}
-.fi-ctitle{font-size:.7rem;color:var(--mu);margin-left:8px}
-.fi-cbadge{
-  margin-left:auto;font-family:'JetBrains Mono',monospace;
-  font-size:.57rem;color:var(--am);
-  background:rgba(240,165,0,.07);
-  padding:3px 9px;border-radius:3px;
-  border:1px solid rgba(240,165,0,.14);
-}
-.fi-body{padding:18px}
-.fi-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.fi-stat{
-  background:var(--s2);border:1px solid var(--bd);
-  border-radius:7px;padding:10px 12px;text-align:center;
-}
-.fi-stat-n{
-  font-family:'JetBrains Mono',monospace;
-  font-size:1rem;font-weight:500;color:var(--w);
-}
-.fi-stat-n.am{color:var(--am)}
-.fi-stat-l{font-size:.6rem;color:var(--mu);margin-top:3px}
-.fi-qlbl{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.55rem;color:var(--mu);
-  letter-spacing:.16em;text-transform:uppercase;margin-bottom:7px;
-}
-.fi-qi{
-  display:flex;align-items:center;gap:9px;
-  padding:9px 11px;border-radius:6px;
-  border:1px solid var(--bd);margin-bottom:4px;
-  background:var(--s1);
-}
-.fi-qi.active{
-  border-color:rgba(240,165,0,.28);
-  background:rgba(240,165,0,.05);
-  animation:qpulse 3s ease-in-out infinite;
-}
-@keyframes qpulse{
-  0%,100%{border-color:rgba(240,165,0,.22)}
-  50%{border-color:rgba(240,165,0,.48)}
-}
-.fi-qi-n{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--dim);width:14px}
-.fi-qi-info{flex:1}
-.fi-qi-name{font-size:.72rem;font-weight:500;color:var(--w);margin-bottom:1px}
-.fi-qi-detail{font-family:'JetBrains Mono',monospace;font-size:.57rem;color:var(--mu)}
-.fi-qi-mgr{font-size:.62rem;color:var(--mu);text-align:right;min-width:68px}
-.fi-qi-mgr span{color:var(--w40)}
-.fi-qi-tag{
-  font-family:'JetBrains Mono',monospace;font-size:.55rem;
-  padding:2px 7px;border-radius:3px;min-width:60px;text-align:center;
-}
-.fi-qi-tag.in{background:rgba(240,165,0,.1);color:var(--am)}
-.fi-qi-tag.wait{background:var(--s3);color:var(--mu)}
-.fi-qi-tag.owed{background:rgba(220,80,80,.1);color:rgba(220,100,100,.85)}
-
-/* sched */
-.fi-sched{
-  margin-top:11px;background:var(--s2);
-  border:1px solid var(--bd);border-radius:7px;padding:11px 13px;
-}
-.fi-slbl{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.53rem;color:var(--mu);
-  letter-spacing:.16em;text-transform:uppercase;margin-bottom:9px;
-}
-.fi-sgrid{display:grid;grid-template-columns:68px repeat(7,1fr);gap:3px;font-size:.55rem}
-.fsh{text-align:center;color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:.53rem;padding:2px 0}
-.fsh.td{color:var(--am)}
-.fsn{color:var(--tx);font-size:.62rem;padding:4px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fsc{text-align:center;padding:3px 1px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.52rem}
-.fsc.on{background:var(--w06);color:var(--w40)}
-.fsc.td{background:rgba(240,165,0,.07);color:var(--am)}
-.fsc.off{color:var(--dim)}
-.fsc.vac{color:rgba(240,165,0,.4)}
-
-
-/* CTA */
-.cta-sec{
-  padding:160px 56px;text-align:center;
-  background:var(--s1);
-  border-top:1px solid var(--bd);
-  position:relative;z-index:1;overflow:hidden;
-}
-.cta-glow{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:700px;height:400px;
-  background:radial-gradient(ellipse,rgba(240,165,0,.04) 0%,transparent 70%);
-  pointer-events:none;animation:ctag 12s ease-in-out infinite;
-}
-@keyframes ctag{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
-.cta-inner{position:relative;z-index:2;max-width:620px;margin:0 auto}
-.cta-tag{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.58rem;color:var(--am);
-  letter-spacing:.22em;text-transform:uppercase;
-  display:block;margin-bottom:28px;
-}
-.cta-h{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(3rem,6vw,6.2rem);
-  line-height:.94;letter-spacing:-.035em;
-  color:var(--w);font-weight:400;margin-bottom:24px;
-}
-.cta-h em{font-style:italic;color:var(--w40)}
-.cta-p{
-  font-size:.95rem;color:var(--mu);
-  line-height:1.88;font-weight:300;margin-bottom:44px;
-}
-.cta-btns{
-  display:flex;align-items:center;justify-content:center;
-  gap:16px;flex-wrap:wrap;margin-bottom:22px;
-}
-.cta-fine{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.58rem;color:var(--dim);letter-spacing:.08em;
-}
-
-/* FOOTER */
-footer{
-  background:var(--bg);border-top:1px solid var(--bd);
-  padding:56px 56px 36px;position:relative;z-index:1;
-}
-.foot-inner{max-width:1080px;margin:0 auto}
-.foot-top{
-  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
-  gap:48px;margin-bottom:48px;
-}
-.foot-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:16px}
-.foot-mark{
-  width:26px;height:26px;border-radius:6px;background:var(--w);
-  display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:800;color:var(--bg);
-}
-.foot-name{
-  font-family:'Cormorant Garamond',serif;
-  font-size:1.05rem;font-weight:500;color:var(--w);
-}
-.foot-tag{
-  font-size:.8rem;color:var(--mu);
-  line-height:1.8;font-weight:300;max-width:220px;
-}
-.foot-col-h{
-  font-size:.7rem;font-weight:500;color:var(--w40);
-  letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;
-}
-.foot-col a{
-  display:block;font-size:.8rem;color:var(--mu);
-  text-decoration:none;margin-bottom:10px;
-  transition:color .2s;font-weight:300;
-}
-.foot-col a:hover{color:var(--w)}
-.foot-bottom{
-  border-top:1px solid var(--bd);padding-top:24px;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:12px;
-}
-.foot-copy{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.57rem;color:var(--dim);letter-spacing:.06em;
-}
-.foot-legal{display:flex;gap:24px}
-.foot-legal a{
-  font-size:.72rem;color:var(--mu);
-  text-decoration:none;transition:color .2s;
-}
-.foot-legal a:hover{color:var(--w)}
-
+body{margin:0;background:#08090d;color:#e5e7eb;font-family:'Outfit',sans-serif;overflow-x:hidden}
+::selection{background:rgba(59,130,246,.25);color:#fff}
+@keyframes heroGlow{0%,100%{opacity:.4}50%{opacity:.7}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+a{text-decoration:none}
+button{font-family:'Outfit',sans-serif}
+input{font-family:'Outfit',sans-serif}
 </style>
 </head>
 <body>
 
-<nav id="nav">
-  <a href="#" class="n-logo">
-    <div class="n-mark">AF</div>
-    <div class="n-name">AutoFlow<span>CRM</span></div>
-  </a>
-  <div class="n-links">
-    <a href="#platform">Platform</a>
-    <a href="#fi">F&amp;I</a>
-    <a href="#floor">Floor</a>
-    <a href="#demo">Demo</a>
+<!-- ── NAVBAR ── -->
+<nav id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;background:transparent;border-bottom:1px solid transparent;transition:all .3s">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#64748b,#334155);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff">V</div>
+    <span style="font-size:18px;font-weight:700;letter-spacing:-0.02em">Velance</span>
   </div>
-  <div class="n-right">
-    <a href="https://app.aflowcrm.com" class="n-in">Sign in</a>
-    <a href="#demo" class="n-demo">Request Demo</a>
+  <div id="nav-links" style="display:flex;gap:32px;align-items:center">
+    <a href="#product" style="color:#9ca3af;font-size:14px;font-weight:500;cursor:pointer;transition:color .2s">Product</a>
+    <a href="#features" style="color:#9ca3af;font-size:14px;font-weight:500;cursor:pointer;transition:color .2s">Features</a>
+    <a href="#pricing" style="color:#9ca3af;font-size:14px;font-weight:500;cursor:pointer;transition:color .2s">Pricing</a>
+    <span onclick="openLogin()" style="color:#e5e7eb;font-size:14px;font-weight:600;cursor:pointer">Sign In</span>
   </div>
+  <span id="nav-mobile-signin" onclick="openLogin()" style="display:none;font-size:13px;font-weight:600;color:#e5e7eb;cursor:pointer">Sign In</span>
 </nav>
 
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-inner">
-    <div class="eyebrow">
-      <div class="ey-line"></div>
-      <div class="ey-txt">Automotive CRM — Rebuilt from the floor up</div>
-    </div>
-    <h1 class="h1">
-      Three types<br>
-      of customer.<br>
-      <em>One system.</em>
-    </h1>
-    <p class="h-sub">
-      AutoFlow is the only CRM that treats an internet lead, a phone up, and a walk-in as <strong>three completely different customers</strong> — because they are.
-    </p>
-    <div class="h-btns">
-      <a href="#demo" class="btn-w">Request a live demo</a>
-      <a href="#platform" class="btn-o">See what's inside</a>
-      <span class="h-note">No contracts &nbsp;·&nbsp; No setup fees</span>
+<!-- ── HERO ── -->
+<section style="position:relative;padding:150px 40px 60px;text-align:center;overflow:hidden" id="hero">
+  <div style="position:absolute;top:10%;left:30%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(100,116,139,.09),transparent 70%);filter:blur(60px);animation:heroGlow 6s ease-in-out infinite;pointer-events:none"></div>
+  <div style="position:absolute;top:20%;right:25%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.07),transparent 70%);filter:blur(80px);animation:heroGlow 8s ease-in-out infinite 2s;pointer-events:none"></div>
+  <div style="position:relative;max-width:1100px;margin:0 auto">
+    <div style="display:inline-block;padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.07);background:#0f1117;font-size:12px;font-weight:500;color:#9ca3af;margin-bottom:24px">Now in early access — no credit card required</div>
+    <h1 style="font-size:66px;font-weight:800;line-height:1.06;letter-spacing:-0.04em;margin-bottom:20px;background:linear-gradient(180deg,#fff 30%,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent">The CRM that<br>actually sells cars</h1>
+    <p style="font-size:18px;color:#9ca3af;max-width:580px;margin:0 auto 32px;line-height:1.6">AI agents that respond to leads in seconds, follow up on autopilot, and surface deals you'd miss. Built by a sales floor veteran who ran a 35-person internet department.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:48px">
+      <button onclick="openLogin()" style="padding:14px 32px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 0 20px rgba(59,130,246,.25)" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 30px rgba(59,130,246,.4)'" onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='0 0 20px rgba(59,130,246,.25)'">Get Early Access</button>
+      <a href="#product" style="padding:14px 28px;border-radius:10px;border:1px solid rgba(255,255,255,.07);color:#9ca3af;font-size:15px;font-weight:600;cursor:pointer;transition:border-color .2s" onmouseenter="this.style.borderColor='#64748b'" onmouseleave="this.style.borderColor='rgba(255,255,255,.07)'">See the product</a>
     </div>
 
-    <!-- THREE COLUMN WORKFLOW PANEL -->
-    <div class="wf-wrap">
-      <div class="wf-lbl">Source-adaptive workflows — live pipeline view</div>
-      <div class="wf-panel">
-        <div class="wf-bar">
-          <div class="wf-dots">
-            <div class="wf-dot r"></div>
-            <div class="wf-dot y"></div>
-            <div class="wf-dot g"></div>
-          </div>
-          <div class="wf-tabs">
-            <div class="wf-tab on">Workflows</div>
-            <div class="wf-tab">Pipeline</div>
-            <div class="wf-tab">Buckets</div>
-          </div>
-          <div class="wf-hint">AutoFlow CRM · aflowcrm.com</div>
+    <!-- Hero CRM Preview — Pipeline -->
+    <div class="fade-in" data-delay="0.2">
+      <div style="border-radius:14px;border:1px solid rgba(255,255,255,.07);overflow:hidden;background:#0f1117;box-shadow:0 20px 80px rgba(59,130,246,.08),0 4px 20px rgba(0,0,0,.4)">
+        <div style="padding:8px 14px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:5px;align-items:center">
+          <div style="display:flex;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#eab308aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#22c55eaa"></div></div>
+          <div style="flex:1;text-align:center;font-size:10px;color:#6b7280;font-weight:500">Pipeline — Internet Leads</div>
+          <div style="width:36px"></div>
         </div>
-        <div class="wf-body">
-
-          <!-- Internet -->
-          <div class="wf-col">
-            <div class="wf-col-head">
-              <div class="wf-col-src">Internet Lead</div>
-              <div class="wf-col-ct">7 stages</div>
-            </div>
-            <div class="wf-stages">
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#34d399"></div><span class="wf-name">Lead Received</span><span class="wf-sub">ADF/XML</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#60a5fa"></div><span class="wf-name">Initial Contact</span></div>
-              <div class="wf-stage active"><div class="wf-dot-s" style="background:#a78bfa"></div><span class="wf-name">Appointment Set</span><span class="wf-sub">14</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#f0a500"></div><span class="wf-name">Showroom Visit</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#e879f9"></div><span class="wf-name">Numbers</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#fb923c"></div><span class="wf-name">Negotiation</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#34d399"></div><span class="wf-name">Sold</span></div>
-            </div>
-          </div>
-
-          <!-- Phone -->
-          <div class="wf-col">
-            <div class="wf-col-head">
-              <div class="wf-col-src">Phone Up</div>
-              <div class="wf-col-ct">6 stages</div>
-            </div>
-            <div class="wf-stages">
-              <div class="wf-stage active"><div class="wf-dot-s" style="background:#60a5fa"></div><span class="wf-name">Initial Contact</span><span class="wf-sub">8</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#a78bfa"></div><span class="wf-name">Appointment Set</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#f0a500"></div><span class="wf-name">Showroom Visit</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#e879f9"></div><span class="wf-name">Numbers</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#fb923c"></div><span class="wf-name">Negotiation</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#34d399"></div><span class="wf-name">Sold</span></div>
-            </div>
-          </div>
-
-          <!-- Walk-in -->
-          <div class="wf-col">
-            <div class="wf-col-head">
-              <div class="wf-col-src">Walk-In</div>
-              <div class="wf-col-ct">5 stages</div>
-            </div>
-            <div class="wf-stages">
-              <div class="wf-stage active"><div class="wf-dot-s" style="background:#f0a500"></div><span class="wf-name">Showroom Visit</span><span class="wf-sub">4</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#e879f9"></div><span class="wf-name">Numbers</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#fb923c"></div><span class="wf-name">Negotiation</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#60a5fa"></div><span class="wf-name">Be-Back Appt</span></div>
-              <div class="wf-stage"><div class="wf-dot-s" style="background:#34d399"></div><span class="wf-name">Sold</span></div>
-            </div>
-          </div>
-
+        <div style="padding:14px">
+          <div id="pipeline-mock" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>
         </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-
-
-<!-- THREE PERSONAS -->
-<section class="tpl-sec reveal" id="platform">
-  <div class="tpl-inner">
-    <div class="tpl-top">
-      <h2 class="tpl-h">
-        One system.<br>
-        <em>Three ways</em><br>
-        to work it.
-      </h2>
-      <p class="tpl-p">
-        Not everyone on your team processes information the same way. AutoFlow ships with three persona-based templates — each one cascades from <strong>admin configuration</strong> down to how each rep sees their day.
-      </p>
-    </div>
-    <div class="tpl-cards">
-      <div class="tc">
-        <div class="tc-n">01 — Template</div>
-        <div class="tc-name">The Analyst</div>
-        <div class="tc-role">Numbers-first. Process-obsessed.</div>
-        <p class="tc-desc">Won't make a move without data behind it. Needs pipeline metrics and lead scoring visible before picking up the phone.</p>
-        <ul class="tc-list">
-          <li>Lead score always front and center</li>
-          <li>Close rate and source performance</li>
-          <li>Rep-level activity tracking</li>
-          <li>Funnel stage conversion view</li>
-          <li>Response time monitoring</li>
-        </ul>
-      </div>
-      <div class="tc">
-        <div class="tc-n">02 — Template</div>
-        <div class="tc-name">The Visualizer</div>
-        <div class="tc-role">Board-thinker. Pattern-reader.</div>
-        <p class="tc-desc">Needs to see the whole floor before working it. Color, layout, and spatial flow communicate more than a list.</p>
-        <ul class="tc-list">
-          <li>Kanban pipeline by stage</li>
-          <li>Customer journey timeline per lead</li>
-          <li>Color-coded status and urgency</li>
-          <li>Live floor overview</li>
-          <li>Visual appointment calendar</li>
-        </ul>
-      </div>
-      <div class="tc">
-        <div class="tc-n">03 — Template</div>
-        <div class="tc-name">The Driver</div>
-        <div class="tc-role">Action-first. Floor-native.</div>
-        <p class="tc-desc">Doesn't want a dashboard — wants to know who to call right now and how to log it fast. Built for closers.</p>
-        <ul class="tc-list">
-          <li>Priority queue — who needs attention now</li>
-          <li>One-tap activity logging</li>
-          <li>Fast follow-up assignment</li>
-          <li>FAB-driven mobile experience</li>
-          <li>Minimal UI, zero friction</li>
-        </ul>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ── TRUST STRIP ── -->
+<div class="fade-in" style="padding:40px;text-align:center;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07)">
+  <div style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px">Powered by</div>
+  <div style="display:flex;gap:48px;justify-content:center;align-items:center;flex-wrap:wrap;opacity:.5">
+    <span style="font-size:15px;font-weight:600;color:#9ca3af;letter-spacing:0.02em">Claude AI</span>
+    <span style="font-size:15px;font-weight:600;color:#9ca3af;letter-spacing:0.02em">Twilio</span>
+    <span style="font-size:15px;font-weight:600;color:#9ca3af;letter-spacing:0.02em">SendGrid</span>
+    <span style="font-size:15px;font-weight:600;color:#9ca3af;letter-spacing:0.02em">Supabase</span>
+  </div>
+</div>
 
-
-<!-- DIFFERENTIATORS -->
-<section class="diff-sec reveal" id="features">
-  <div class="diff-inner">
-    <div class="s-eye">
-      <div class="s-eye-line"></div>
-      <div class="s-eye-txt">Why AutoFlow</div>
+<!-- ── PROBLEM ── -->
+<section style="padding:100px 40px">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="fade-in" style="text-align:center;margin-bottom:48px">
+      <h2 style="font-size:42px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px">Your CRM is the problem</h2>
+      <p style="font-size:17px;color:#9ca3af;max-width:550px;margin:0 auto">Dealers lose hours every day to systems built for reporting, not selling.</p>
     </div>
-    <div class="diff-hd">
-      <h2 class="diff-h">
-        Everything your<br>
-        floor needs.<br>
-        <em>Nothing it doesn't.</em>
-      </h2>
-      <p class="diff-p">
-        Generic CRMs were built for software sales teams, then retrofitted for auto dealers. AutoFlow was designed from scratch around <strong>how dealerships actually operate</strong> — every feature exists because a real floor process demanded it.
-      </p>
-    </div>
-    <div class="diff-grid">
-      <div class="dc">
-        <div class="dc-num">01</div>
-        <div class="dc-only">Only in AutoFlow</div>
-        <div class="dc-title">Source-Adaptive<br>Workflows</div>
-        <div class="dc-body">An internet lead and a walk-in are not the same customer. AutoFlow routes each to its own <strong>purpose-built pipeline</strong> with the right stages for how that customer actually behaves.</div>
-        <div class="dc-proof">Internet → 7 stages<br>Phone Up → 6 stages<br>Walk-In → 5 stages</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" id="stats-grid">
+      <div class="fade-in" style="padding:28px;border-radius:14px;background:#161924;border:1px solid rgba(255,255,255,.07)">
+        <div style="font-size:40px;font-weight:800;color:#fff;line-height:1">5+</div>
+        <div style="font-size:13px;font-weight:600;color:#64748b;margin-top:4px;margin-bottom:12px">clicks to log a call</div>
+        <div style="font-size:14px;color:#9ca3af;line-height:1.6">Legacy CRMs turn sellers into data entry clerks. Every extra click is a customer not being helped.</div>
       </div>
-      <div class="dc">
-        <div class="dc-num">02</div>
-        <div class="dc-only">Only in AutoFlow</div>
-        <div class="dc-title">Native F&amp;I<br>Operations</div>
-        <div class="dc-body">Live deal queue, rotation schedule, skip tracking, clock-in/out, and a full contract log. <strong>No other CRM manages F&amp;I.</strong> You've been doing this on a whiteboard.</div>
-        <div class="dc-proof">Queue · Rotation · Skip log<br>Contract log · Customer visits</div>
+      <div class="fade-in" data-delay="0.1" style="padding:28px;border-radius:14px;background:#161924;border:1px solid rgba(255,255,255,.07)">
+        <div style="font-size:40px;font-weight:800;color:#fff;line-height:1">47</div>
+        <div style="font-size:13px;font-weight:600;color:#64748b;margin-top:4px;margin-bottom:12px">min avg response time</div>
+        <div style="font-size:14px;color:#9ca3af;line-height:1.6">Internet leads go cold in minutes. By the time most dealers reply, the customer has moved on.</div>
       </div>
-      <div class="dc">
-        <div class="dc-num">03</div>
-        <div class="dc-only">Only in AutoFlow</div>
-        <div class="dc-title">Live Floor<br>Intelligence</div>
-        <div class="dc-body">Real-time test drive timers with plate tracking, showroom check-in with auto-timing, overdue alerts the moment a car runs long. <strong>Know where every vehicle is — right now.</strong></div>
-        <div class="dc-proof">Live timers · Plate inventory<br>DL capture · Overdue alerts</div>
-      </div>
-      <div class="dc">
-        <div class="dc-num">04</div>
-        <div class="dc-only">Automation</div>
-        <div class="dc-title">Cadence<br>Engine</div>
-        <div class="dc-body">Multi-step follow-up sequences that pause when a customer responds, resume when they go dark, and surface the <strong>highest-priority contacts first</strong>. Not reminders — logic.</div>
-        <div class="dc-proof">Auto-pause · Priority weights<br>5 built-in templates</div>
-      </div>
-      <div class="dc">
-        <div class="dc-num">05</div>
-        <div class="dc-only">Deal Tools</div>
-        <div class="dc-title">Desking &amp;<br>Quick Proposals</div>
-        <div class="dc-body">Full deal calculator with trade, tax, and payments across every term — plus a proposal you can <strong>text or email in one tap</strong> from the CRM in under 30 seconds.</div>
-        <div class="dc-proof">36–84mo · Cash · Finance · Lease<br>Text or email in one tap</div>
-      </div>
-      <div class="dc">
-        <div class="dc-num">06</div>
-        <div class="dc-only">Smart Distribution</div>
-        <div class="dc-title">AI Lead<br>Assignment</div>
-        <div class="dc-body">Scores every rep in real time — workload, close rate, source familiarity, returning customer history. <strong>Smart Match assigns leads instantly</strong> the moment they hit the webhook.</div>
-        <div class="dc-proof">4 modes · Smart Match AI<br>Round Robin · Manager Queue</div>
+      <div class="fade-in" data-delay="0.2" style="padding:28px;border-radius:14px;background:#161924;border:1px solid rgba(255,255,255,.07)">
+        <div style="font-size:40px;font-weight:800;color:#fff;line-height:1">0</div>
+        <div style="font-size:13px;font-weight:600;color:#64748b;margin-top:4px;margin-bottom:12px">service drive alerts</div>
+        <div style="font-size:14px;color:#9ca3af;line-height:1.6">70% of repeat sales start in the service lane. Your CRM has no idea your customer just checked in.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- F&I SECTION -->
-<section class="fi-sec reveal" id="fi">
-  <div class="fi-inner">
-    <div class="fi-grid">
-      <div>
-        <div class="s-eye" style="margin-bottom:22px">
-          <div class="s-eye-line"></div>
-          <div class="s-eye-txt">F&amp;I Operations</div>
-        </div>
-        <h2 class="fi-h">
-          You've been running<br>
-          F&amp;I on a whiteboard.<br>
-          <em>We fixed that.</em>
-        </h2>
-        <p class="fi-p">
-          No other CRM has a native F&amp;I module. AutoFlow gives finance managers a <strong>live deal queue with automatic rotation</strong>, weekly scheduling, and a full contract log — all synced to your sales floor in real time.
-        </p>
-        <div class="fi-items">
-          <div class="fi-item"><div class="fi-dot"></div><div class="fi-item-txt"><strong>Live deal queue</strong> — who's in office, who's waiting, who's next</div></div>
-          <div class="fi-item"><div class="fi-dot"></div><div class="fi-item-txt"><strong>Rotation schedule</strong> — weekly grid with clock-in/out per manager</div></div>
-          <div class="fi-item"><div class="fi-dot"></div><div class="fi-item-txt"><strong>Skip &amp; owed tracking</strong> — every skip logged, owed deals surfaced automatically</div></div>
-          <div class="fi-item"><div class="fi-dot"></div><div class="fi-item-txt"><strong>Contract log</strong> — every deal with products sold, manager, and notes</div></div>
-        </div>
-        <a href="#demo" class="fi-link">See the F&amp;I module live →</a>
-      </div>
-      <div class="fi-win">
-        <div class="fi-chrome">
-          <div class="fi-cdots"><div class="fi-cdot r"></div><div class="fi-cdot y"></div><div class="fi-cdot g"></div></div>
-          <div class="fi-ctitle">F&amp;I — Deal Queue</div>
-          <div class="fi-cbadge">2 waiting</div>
-        </div>
-        <div class="fi-body">
-          <div class="fi-stats">
-            <div class="fi-stat"><div class="fi-stat-n am">Rivera</div><div class="fi-stat-l">Next up</div></div>
-            <div class="fi-stat"><div class="fi-stat-n">2</div><div class="fi-stat-l">Waiting</div></div>
-            <div class="fi-stat"><div class="fi-stat-n" style="color:rgba(220,100,100,.8)">1</div><div class="fi-stat-l">Owed</div></div>
-          </div>
-          <div class="fi-qlbl">Queue</div>
-          <div class="fi-qi active">
-            <div class="fi-qi-n">1</div>
-            <div class="fi-qi-info"><div class="fi-qi-name">Marcus Johnson · D-1042</div><div class="fi-qi-detail">#25T1820 · New · Carlos V.</div></div>
-            <div class="fi-qi-mgr">F&amp;I: <span>Chen</span></div>
-            <div class="fi-qi-tag in">IN OFFICE</div>
-          </div>
-          <div class="fi-qi">
-            <div class="fi-qi-n">2</div>
-            <div class="fi-qi-info"><div class="fi-qi-name">Sarah &amp; Tom Reyes · D-1043</div><div class="fi-qi-detail">#24H9913 · Used · Jamie L.</div></div>
-            <div class="fi-qi-mgr">Next: <span>Rivera</span></div>
-            <div class="fi-qi-tag wait">WAITING</div>
-          </div>
-          <div class="fi-qi">
-            <div class="fi-qi-n">3</div>
-            <div class="fi-qi-info"><div class="fi-qi-name">Derek Okonkwo · D-1044</div><div class="fi-qi-detail">#25H0044 · New · Mia T.</div></div>
-            <div class="fi-qi-mgr">Owed: <span>Rivera</span></div>
-            <div class="fi-qi-tag owed">OWED</div>
-          </div>
-          <div class="fi-sched">
-            <div class="fi-slbl">Weekly Schedule</div>
-            <div class="fi-sgrid">
-              <div></div>
-              <div class="fsh">Su</div><div class="fsh">Mo</div><div class="fsh td">Tu</div>
-              <div class="fsh">We</div><div class="fsh">Th</div><div class="fsh">Fr</div><div class="fsh">Sa</div>
-              <div class="fsn">Chen</div>
-              <div class="fsc off">—</div><div class="fsc on">9-6</div><div class="fsc td">9-6</div>
-              <div class="fsc on">9-6</div><div class="fsc off">—</div><div class="fsc on">10-7</div><div class="fsc on">10-7</div>
-              <div class="fsn">Rivera</div>
-              <div class="fsc on">10-7</div><div class="fsc off">—</div><div class="fsc td">10-7</div>
-              <div class="fsc on">10-7</div><div class="fsc on">10-7</div><div class="fsc off">—</div><div class="fsc on">10-7</div>
-              <div class="fsn">Patel</div>
-              <div class="fsc on">9-6</div><div class="fsc on">9-6</div><div class="fsc vac">VAC</div>
-              <div class="fsc off">—</div><div class="fsc on">9-6</div><div class="fsc on">9-6</div><div class="fsc off">—</div>
+<!-- ── PRODUCT SHOWCASE ── -->
+<section id="product" style="padding:100px 40px">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="fade-in" style="text-align:center;margin-bottom:56px">
+      <h2 style="font-size:42px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px">See it in action</h2>
+      <p style="font-size:17px;color:#9ca3af;max-width:550px;margin:0 auto">Real product. Real features. No stock photos.</p>
+    </div>
+
+    <!-- Deal Pad -->
+    <div class="fade-in" style="margin-bottom:72px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+        <div>
+          <div style="border-radius:14px;border:1px solid rgba(255,255,255,.07);overflow:hidden;background:#0f1117;box-shadow:0 20px 80px rgba(59,130,246,.08),0 4px 20px rgba(0,0,0,.4)">
+            <div style="padding:8px 14px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:5px;align-items:center">
+              <div style="display:flex;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#eab308aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#22c55eaa"></div></div>
+              <div style="flex:1;text-align:center;font-size:10px;color:#6b7280;font-weight:500">Velance — Deal Pad</div>
+              <div style="width:36px"></div>
             </div>
+            <div style="padding:14px" id="dealpad-mock"></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Deal Pad</div>
+          <h3 style="font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:14px;color:#fff">Numbers in seconds, not minutes</h3>
+          <p style="font-size:15px;color:#9ca3af;line-height:1.7;margin-bottom:18px">Lease, finance, cash, and Ford Flex Buy — all on one screen. A 5x5 payment matrix lets your desk manager pencil any deal in seconds. Click a cell, send a proposal, track when the customer opens it.</p>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0"></div>Payment matrix: every term x down payment combo</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0"></div>Multi-option proposals (cash + finance + lease on one pencil)</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0"></div>Customer-facing proposal page with real-time recalculation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Assistant (reversed) -->
+    <div class="fade-in" style="margin-bottom:72px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;direction:rtl">
+        <div style="direction:ltr">
+          <div style="border-radius:14px;border:1px solid rgba(255,255,255,.07);overflow:hidden;background:#0f1117;box-shadow:0 20px 80px rgba(139,92,246,.08),0 4px 20px rgba(0,0,0,.4)">
+            <div style="padding:8px 14px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:5px;align-items:center">
+              <div style="display:flex;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#eab308aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#22c55eaa"></div></div>
+              <div style="flex:1;text-align:center;font-size:10px;color:#6b7280;font-weight:500">Velance — AI Assistant</div>
+              <div style="width:36px"></div>
+            </div>
+            <div style="padding:14px" id="ai-mock"></div>
+          </div>
+        </div>
+        <div style="direction:ltr">
+          <div style="font-size:12px;font-weight:700;color:#8b5cf6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">AI Assistant</div>
+          <h3 style="font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:14px;color:#fff">Ask anything. Get answers.</h3>
+          <p style="font-size:15px;color:#9ca3af;line-height:1.7;margin-bottom:18px">A real AI that writes its own SQL queries, searches your leads, and generates charts — not a chatbot with canned responses. Ask complex questions in plain English and get actionable insights.</p>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#8b5cf6;flex-shrink:0"></div>Autonomous tool-use agent with self-correcting logic</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#8b5cf6;flex-shrink:0"></div>Inline charts, lead cards, and exportable reports</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#8b5cf6;flex-shrink:0"></div>Natural language queries across your entire database</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contract Log -->
+    <div class="fade-in">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+        <div>
+          <div style="border-radius:14px;border:1px solid rgba(255,255,255,.07);overflow:hidden;background:#0f1117;box-shadow:0 20px 80px rgba(34,197,94,.08),0 4px 20px rgba(0,0,0,.4)">
+            <div style="padding:8px 14px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:5px;align-items:center">
+              <div style="display:flex;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#eab308aa"></div><div style="width:8px;height:8px;border-radius:50%;background:#22c55eaa"></div></div>
+              <div style="flex:1;text-align:center;font-size:10px;color:#6b7280;font-weight:500">Velance — F&I Contract Log</div>
+              <div style="width:36px"></div>
+            </div>
+            <div style="padding:14px" id="contractlog-mock"></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">F&I Contract Log</div>
+          <h3 style="font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:14px;color:#fff">The deal queue nobody else has</h3>
+          <p style="font-size:15px;color:#9ca3af;line-height:1.7;margin-bottom:18px">Track every deal from signed buyer's order through final contracts. Rotation scheduling, skip tracking, and PVR reporting — built into the CRM where it belongs, not on a whiteboard.</p>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#22c55e;flex-shrink:0"></div>Live deal queue with stage tracking</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#22c55e;flex-shrink:0"></div>Finance manager rotation with fair distribution</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:5px;height:5px;border-radius:50%;background:#22c55e;flex-shrink:0"></div>Real-time PVR and product penetration metrics</div>
           </div>
         </div>
       </div>
@@ -913,76 +198,405 @@ footer{
   </div>
 </section>
 
-
-
-<!-- CTA -->
-<section class="cta-sec reveal" id="demo">
-  <div class="cta-glow"></div>
-  <div class="cta-inner">
-    <span class="cta-tag">Get started</span>
-    <h2 class="cta-h">
-      See what your floor<br>looks like when it<br><em>actually has a system.</em>
-    </h2>
-    <p class="cta-p">
-      AutoFlow is purpose-built for automotive dealerships. Request a live demo and we'll walk you through exactly how it fits your floor — no generic pitch, no padded feature lists.
-    </p>
-    <div class="cta-btns">
-      <a href="mailto:hello@aflowcrm.com" class="btn-w">Request a live demo</a>
-      <a href="https://app.aflowcrm.com" class="btn-o">Sign in to your account</a>
+<!-- ── BENTO FEATURES ── -->
+<section id="features" style="padding:100px 40px;background:#0f1117">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="fade-in" style="text-align:center;margin-bottom:48px">
+      <h2 style="font-size:42px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px">Built different</h2>
+      <p style="font-size:17px;color:#9ca3af;max-width:500px;margin:0 auto">Every feature designed by someone who sat in the chair.</p>
     </div>
-    <div class="cta-fine">No contracts &nbsp;·&nbsp; No setup fees &nbsp;·&nbsp; Built in Nevada, USA</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px" id="bento-grid">
+      <!-- AI Agents (big) -->
+      <div class="fade-in" style="grid-column:span 2;padding:28px;border-radius:14px;background:#161924;border:1px solid rgba(255,255,255,.07);position:relative;overflow:hidden">
+        <div style="position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.06),transparent 70%);pointer-events:none"></div>
+        <div style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(59,130,246,.1);color:#3b82f6;font-size:16px;font-weight:800;margin-bottom:14px;font-family:monospace">/</div>
+        <h3 style="font-size:22px;font-weight:700;margin-bottom:4px;color:#fff">AI Agents</h3>
+        <div style="font-size:13px;font-weight:600;color:#3b82f6;margin-bottom:10px">That actually do the work</div>
+        <p style="font-size:14px;color:#9ca3af;line-height:1.6">Internet leads get a personalized response in under 60 seconds. Follow-ups happen on schedule, across every channel. Your pipeline stays warm on autopilot.</p>
+      </div>
+      <!-- Service Drive -->
+      <div class="fade-in" data-delay="0.05" style="padding:28px;border-radius:14px;background:#161924;border:1px solid rgba(255,255,255,.07)">
+        <div style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(245,158,11,.1);color:#f59e0b;font-size:16px;font-weight:800;margin-bottom:14px;font-family:monospace">!</div>
+        <h3 style="font-size:17px;font-weight:700;margin-bottom:4px;color:#fff">Service Drive Alerts</h3>
+        <div style="font-size:13px;font-weight:600;color:#f59e0b;margin-bottom:10px">The deal nobody else sees</div>
+        <p style="font-size:14px;color:#9ca3af;line-height:1.6">When your sold customer checks in for service, you get notified with equity data and trade-up opportunity. 70% of repeat sales start here.</p>
+      </div>
+      <!-- Personas -->
+      <div class="fade-in" data-delay="0.1" style="padding:28px;border-radius:14px;background:#161924;border:1px solid rgba(255,255,255,.07)">
+        <div style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(139,92,246,.1);color:#8b5cf6;font-size:16px;font-weight:800;margin-bottom:14px;font-family:monospace">*</div>
+        <h3 style="font-size:17px;font-weight:700;margin-bottom:4px;color:#fff">Workspace Personas</h3>
+        <div style="font-size:13px;font-weight:600;color:#8b5cf6;margin-bottom:10px">Your CRM, your way</div>
+        <p style="font-size:14px;color:#9ca3af;line-height:1.6;margin-bottom:14px">Three pre-built layouts — The Analyst, The Visualizer, The Driver. Each rep picks the workspace that matches how they sell.</p>
+        <!-- Personas mini mockup -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px" id="personas-mock"></div>
+      </div>
+      <!-- Smart Buckets -->
+      <div class="fade-in" data-delay="0.15" style="padding:28px;border-radius:14px;background:#161924;border:1px solid rgba(255,255,255,.07)">
+        <div style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(34,197,94,.1);color:#22c55e;font-size:16px;font-weight:800;margin-bottom:14px;font-family:monospace">#</div>
+        <h3 style="font-size:17px;font-weight:700;margin-bottom:4px;color:#fff">Smart Buckets</h3>
+        <div style="font-size:13px;font-weight:600;color:#22c55e;margin-bottom:10px">Leads move themselves</div>
+        <p style="font-size:14px;color:#9ca3af;line-height:1.6">Contact a fresh lead, they move to working. Set an appointment, they move to appointed. No dragging, no clicking, no forgetting.</p>
+      </div>
+      <!-- Unified Comms -->
+      <div class="fade-in" data-delay="0.2" style="padding:28px;border-radius:14px;background:#161924;border:1px solid rgba(255,255,255,.07)">
+        <div style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(59,130,246,.1);color:#3b82f6;font-size:16px;font-weight:800;margin-bottom:14px;font-family:monospace">@</div>
+        <h3 style="font-size:17px;font-weight:700;margin-bottom:4px;color:#fff">Unified Comms</h3>
+        <div style="font-size:13px;font-weight:600;color:#3b82f6;margin-bottom:10px">One conversation</div>
+        <p style="font-size:14px;color:#9ca3af;line-height:1.6">Text, email, and call history in one thread per customer. Sticky chat heads let you juggle multiple conversations without losing context.</p>
+      </div>
+      <!-- Command Palette -->
+      <div class="fade-in" data-delay="0.25" style="padding:28px;border-radius:14px;background:#161924;border:1px solid rgba(255,255,255,.07)">
+        <div style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(100,116,139,.1);color:#64748b;font-size:16px;font-weight:800;margin-bottom:14px;font-family:monospace">&gt;</div>
+        <h3 style="font-size:17px;font-weight:700;margin-bottom:4px;color:#fff">Command Palette</h3>
+        <div style="font-size:13px;font-weight:600;color:#64748b;margin-bottom:10px">Ctrl+K everything</div>
+        <p style="font-size:14px;color:#9ca3af;line-height:1.6">Find a lead, log a call, pull up a report. Do anything from anywhere without touching the mouse. Speed is the feature.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="foot-inner">
-    <div class="foot-top">
-      <div>
-        <a href="#" class="foot-logo">
-          <div class="foot-mark">AF</div>
-          <div class="foot-name">AutoFlow CRM</div>
-        </a>
-        <p class="foot-tag">The operating system for modern automotive dealerships. Built for the floor, not the boardroom.</p>
+<!-- ── HOW IT WORKS ── -->
+<section style="padding:100px 40px">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="fade-in" style="text-align:center;margin-bottom:48px">
+      <h2 style="font-size:42px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px">Three steps to every deal</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div class="fade-in">
+        <div style="font-size:48px;font-weight:800;color:#3b82f6;opacity:.3;line-height:1;margin-bottom:12px">01</div>
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:#fff">Leads flow in</h3>
+        <p style="font-size:14px;color:#9ca3af;line-height:1.6">Internet leads, phone ups, walk-ins. ADF import, API, manual entry. Every lead lands in one place.</p>
       </div>
-      <div class="foot-col">
-        <div class="foot-col-h">Platform</div>
-        <a href="#platform">Workflows</a>
-        <a href="#platform">Personas</a>
-        <a href="#features">F&amp;I Operations</a>
-        <a href="#features">Floor Intelligence</a>
-        <a href="#features">Cadence Engine</a>
-        <a href="#features">Desking Tools</a>
+      <div class="fade-in" data-delay="0.12">
+        <div style="font-size:48px;font-weight:800;color:#3b82f6;opacity:.3;line-height:1;margin-bottom:12px">02</div>
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:#fff">AI engages instantly</h3>
+        <p style="font-size:14px;color:#9ca3af;line-height:1.6">Personalized first response in under a minute. Smart follow-up cadences. Engagement scoring that actually works.</p>
       </div>
-      <div class="foot-col">
-        <div class="foot-col-h">Product</div>
-        <a href="#demo">Request Demo</a>
-        <a href="https://app.aflowcrm.com">Sign In</a>
-        <a href="mailto:hello@aflowcrm.com">Contact</a>
-      </div>
-      <div class="foot-col">
-        <div class="foot-col-h">Legal</div>
-        <a href="/terms">Terms of Service</a>
-        <a href="/privacy">Privacy Policy</a>
-        <a href="mailto:support@aflowcrm.com">Support</a>
+      <div class="fade-in" data-delay="0.24">
+        <div style="font-size:48px;font-weight:800;color:#3b82f6;opacity:.3;line-height:1;margin-bottom:12px">03</div>
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;color:#fff">You close</h3>
+        <p style="font-size:14px;color:#9ca3af;line-height:1.6">Show up to warm conversations, not cold calls. Every touchpoint logged. Focus on selling, not scheduling.</p>
       </div>
     </div>
-    <div class="foot-bottom">
-      <div class="foot-copy">© 2025 AUTOFLOW CRM LLC &nbsp;·&nbsp; NEVADA &nbsp;·&nbsp; AFLOWCRM.COM</div>
-      <div class="foot-legal">
-        <a href="/terms">Terms</a>
-        <a href="/privacy">Privacy</a>
-        <a href="mailto:hello@aflowcrm.com">Contact</a>
+  </div>
+</section>
+
+<!-- ── VS LEGACY ── -->
+<section style="padding:100px 40px;background:#0f1117">
+  <div style="max-width:800px;margin:0 auto">
+    <div class="fade-in" style="text-align:center;margin-bottom:40px">
+      <h2 style="font-size:42px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px">Not another legacy CRM</h2>
+      <p style="font-size:17px;color:#9ca3af">See what changes when the CRM is built for salespeople.</p>
+    </div>
+    <div class="fade-in">
+      <div style="border-radius:14px;border:1px solid rgba(255,255,255,.07);overflow:hidden">
+        <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;padding:14px 20px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07)">
+          <div></div><div>Legacy CRMs</div><div style="color:#3b82f6">Velance</div>
+        </div>
+        <div id="comparison-rows"></div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing" style="padding:100px 40px">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="fade-in" style="text-align:center;margin-bottom:48px">
+      <h2 style="font-size:42px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px">Transparent pricing</h2>
+      <p style="font-size:17px;color:#9ca3af">No custom quotes. No annual lock-in. No surprises.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start" id="pricing-grid"></div>
+  </div>
+</section>
+
+<!-- ── FOUNDER ── -->
+<section style="padding:100px 40px;background:#0f1117">
+  <div class="fade-in" style="max-width:700px;margin:0 auto;text-align:center">
+    <div style="font-size:32px;font-weight:300;color:#9ca3af;line-height:1.5;font-style:italic;margin-bottom:20px">&ldquo;I ran a 35-person internet sales department. I know exactly what&rsquo;s broken because I lived it every day. We built Velance to be the CRM I wish I had.&rdquo;</div>
+    <div style="font-size:14px;font-weight:600;color:#fff">Founder, Velance CRM</div>
+    <div style="font-size:13px;color:#6b7280">Former Internet Sales Director</div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section style="padding:100px 40px 60px;text-align:center;position:relative;overflow:hidden">
+  <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.04),transparent 70%);filter:blur(60px);pointer-events:none"></div>
+  <div class="fade-in" style="position:relative">
+    <h2 style="font-size:48px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px;background:linear-gradient(180deg,#fff 30%,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Your next deal is waiting</h2>
+    <p style="font-size:17px;color:#9ca3af;max-width:500px;margin:0 auto 32px">Stop losing leads to slow CRMs and missed follow-ups.</p>
+    <button onclick="openLogin()" style="padding:16px 40px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 0 30px rgba(59,130,246,.25);transition:transform .15s,box-shadow .15s" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 40px rgba(59,130,246,.4)'" onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='0 0 30px rgba(59,130,246,.25)'">Get Early Access</button>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer style="padding:40px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;max-width:1100px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:8px">
+    <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#64748b,#334155);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#fff">V</div>
+    <span style="font-size:14px;font-weight:600">Velance CRM</span>
+    <span style="font-size:12px;color:#6b7280">&copy; 2026</span>
+  </div>
+  <div style="display:flex;gap:24px;font-size:13px">
+    <a href="#product" style="color:#9ca3af">Product</a>
+    <a href="#features" style="color:#9ca3af">Features</a>
+    <a href="#pricing" style="color:#9ca3af">Pricing</a>
   </div>
 </footer>
 
+<!-- ── LOGIN MODAL ── -->
+<div id="login-overlay" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closeLogin()">
+  <div style="width:100%;max-width:380px;background:#0f1117;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:32px;animation:fadeUp .3s ease">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#64748b,#334155);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff">V</div>
+        <div><div style="font-size:16px;font-weight:700">Sign in</div><div style="font-size:11px;color:#9ca3af">Welcome back</div></div>
+      </div>
+      <button onclick="closeLogin()" style="background:none;border:none;color:#6b7280;font-size:20px;cursor:pointer;padding:4px;line-height:1">&times;</button>
+    </div>
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">Username</div>
+        <input id="login-user" type="text" placeholder="johndoe" required autocapitalize="none" autocorrect="off" style="width:100%;padding:12px 14px;background:#161924;border:1px solid rgba(255,255,255,.07);border-radius:10px;color:#e5e7eb;font-size:14px;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='#64748b'" onblur="this.style.borderColor='rgba(255,255,255,.07)'" />
+      </div>
+      <div style="margin-bottom:20px">
+        <div style="font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">Password</div>
+        <input id="login-pw" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" required style="width:100%;padding:12px 14px;background:#161924;border:1px solid rgba(255,255,255,.07);border-radius:10px;color:#e5e7eb;font-size:14px;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='#64748b'" onblur="this.style.borderColor='rgba(255,255,255,.07)'" />
+      </div>
+      <div id="login-error" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#ef4444"></div>
+      <button id="login-btn" type="submit" style="width:100%;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,#64748b,#334155);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s">Sign In</button>
+    </form>
+    <div style="margin-top:20px;text-align:center;font-size:12px;color:#6b7280">New to Velance? <a href="mailto:hello@velancecrm.com" style="color:#3b82f6;font-weight:600">Request access</a></div>
+  </div>
+</div>
+
 <script>
-const nav = document.getElementById('nav');
-window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
-const ro = new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.1});
-document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+// ── Supabase client ──
+const sb = window.supabase.createClient(
+  'https://tvvuxuoqdzvzxkskpxwy.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2dnV4dW9xZHp2enhrc2tweHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NjExMDgsImV4cCI6MjA4NjQzNzEwOH0.SsZz_MF0BlQVGDPGYcC-MMdHyR1b_edDNe77EBFT-YE'
+);
+
+// CRM app URL — after login, redirect here
+const CRM_URL = 'https://autoflow-crm.vercel.app';
+
+// ── Login modal ──
+function openLogin() {
+  document.getElementById('login-overlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('login-user').focus(), 100);
+}
+function closeLogin() {
+  document.getElementById('login-overlay').style.display = 'none';
+  document.getElementById('login-error').style.display = 'none';
+}
+async function handleLogin(e) {
+  e.preventDefault();
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  const user = document.getElementById('login-user').value.trim();
+  const pw = document.getElementById('login-pw').value;
+  errEl.style.display = 'none';
+  btn.textContent = 'Signing in...';
+  btn.style.opacity = '0.7';
+  btn.style.cursor = 'wait';
+  const email = user.includes('@') ? user : user.toLowerCase().replace(/\s+/g,'') + '@aflowcrm.local';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
+  if (error) {
+    errEl.textContent = 'Invalid username or password';
+    errEl.style.display = 'block';
+    btn.textContent = 'Sign In';
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    return;
+  }
+  // Redirect to CRM app with session
+  window.location.href = CRM_URL;
+}
+
+// ── Navbar scroll effect ──
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) {
+    nav.style.background = '#0f1117ee';
+    nav.style.backdropFilter = 'blur(12px)';
+    nav.style.borderBottom = '1px solid rgba(255,255,255,.07)';
+  } else {
+    nav.style.background = 'transparent';
+    nav.style.backdropFilter = 'none';
+    nav.style.borderBottom = '1px solid transparent';
+  }
+}, { passive: true });
+
+// ── Mobile responsive ──
+const mob = window.innerWidth < 768;
+if (mob) {
+  document.getElementById('nav-links').style.display = 'none';
+  document.getElementById('nav-mobile-signin').style.display = 'block';
+  nav.style.padding = '12px 16px';
+  document.getElementById('hero').style.padding = '130px 20px 40px';
+  document.querySelector('#hero h1').style.fontSize = '40px';
+  document.getElementById('pipeline-mock').style.gridTemplateColumns = 'repeat(2,1fr)';
+  document.getElementById('stats-grid').style.gridTemplateColumns = '1fr';
+  // Make all 2-col showcases 1-col
+  document.querySelectorAll('#product > div > div > .fade-in > div[style*="grid-template-columns: 1fr 1fr"],.fade-in > div[style*="grid-template-columns:1fr 1fr"]').forEach(el => {
+    el.style.gridTemplateColumns = '1fr';
+    el.style.direction = 'ltr';
+  });
+  document.getElementById('bento-grid').style.gridTemplateColumns = '1fr';
+  document.querySelectorAll('#bento-grid > .fade-in[style*="span 2"]').forEach(el => el.style.gridColumn = 'span 1');
+  document.getElementById('pricing-grid').style.gridTemplateColumns = '1fr';
+}
+
+// ── Fade-in observer ──
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const delay = entry.target.dataset.delay || 0;
+      setTimeout(() => entry.target.classList.add('visible'), delay * 1000);
+      obs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+// ── Build dynamic mockups ──
+// Pipeline
+(function() {
+  const cols = [
+    { name: 'Uncontacted', color: '#ef4444', leads: [{ name: 'Sarah Mitchell', vehicle: '2024 F-150 XLT', time: '2m', hot: true }, { name: 'David Park', vehicle: '2024 Explorer ST', time: '15m' }] },
+    { name: 'Working', color: '#f59e0b', leads: [{ name: 'Marcus Johnson', vehicle: '2024 Escape SE', time: '1h' }, { name: 'Jennifer Wu', vehicle: '2024 Bronco', time: '3h' }] },
+    { name: 'Appointed', color: '#3b82f6', leads: [{ name: 'Tyler Brooks', vehicle: '2024 Mustang GT', time: 'Tomorrow' }] },
+    { name: 'Sold', color: '#22c55e', leads: [{ name: 'Amanda Ross', vehicle: '2024 Edge ST', time: 'Today' }] },
+  ];
+  const el = document.getElementById('pipeline-mock');
+  cols.forEach(col => {
+    let html = `<div><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><div style="width:6px;height:6px;border-radius:50%;background:${col.color}"></div><span style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em">${col.name}</span><span style="font-size:9px;color:#6b7280;font-family:monospace">${col.leads.length}</span></div>`;
+    col.leads.forEach(l => {
+      html += `<div style="padding:7px 9px;border-radius:7px;background:#161924;border:1px solid rgba(255,255,255,.07);margin-bottom:5px;font-size:10px"><div style="font-weight:600;color:#fff;margin-bottom:1px">${l.name}</div><div style="color:#6b7280;font-size:9px">${l.vehicle}</div><div style="display:flex;justify-content:space-between;margin-top:3px"><span style="font-size:9px;color:#6b7280">${l.time}</span>${l.hot ? '<span style="font-size:7px;padding:1px 4px;border-radius:3px;background:rgba(239,68,68,.12);color:#ef4444;font-weight:700">HOT</span>' : ''}</div></div>`;
+    });
+    html += '</div>';
+    el.innerHTML += html;
+  });
+})();
+
+// Deal Pad
+(function() {
+  const terms = [36,48,60,72,84], downs = ['$0','$1k','$2k','$3k','$5k'];
+  const payments = [[1178,1150,1122,1094,1038],[903,882,861,840,798],[739,722,705,688,653],[631,617,603,589,561],[554,542,530,518,493]];
+  let html = '<div style="display:flex;gap:4px;margin-bottom:8px">';
+  ['Finance','Lease','Cash','Flex Buy'].forEach((t,i) => {
+    html += `<div style="padding:4px 9px;border-radius:5px;font-size:9px;font-weight:700;background:${i===0?'rgba(59,130,246,.12)':'transparent'};color:${i===0?'#3b82f6':'#6b7280'};border:1px solid ${i===0?'rgba(59,130,246,.25)':'rgba(255,255,255,.07)'}">${t}</div>`;
+  });
+  html += '</div>';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:10px"><span style="font-weight:600;color:#fff">2024 Ford F-150 XLT</span><span style="color:#3b82f6;font-weight:600">$42,500 · 6.49% APR</span></div>';
+  html += '<div style="border-radius:7px;border:1px solid rgba(255,255,255,.07);overflow:hidden;font-size:9px;font-family:monospace">';
+  html += '<div style="display:grid;grid-template-columns:40px repeat(5,1fr);background:#161924;border-bottom:1px solid rgba(255,255,255,.07)"><div style="padding:4px 5px;color:#6b7280;font-size:8px">Down</div>';
+  downs.forEach(d => { html += `<div style="padding:4px 3px;color:#6b7280;text-align:center;font-size:8px">${d}</div>`; });
+  html += '</div>';
+  terms.forEach((t,ti) => {
+    html += `<div style="display:grid;grid-template-columns:40px repeat(5,1fr);border-bottom:${ti<4?'1px solid rgba(255,255,255,.07)':'none'}"><div style="padding:5px;color:#9ca3af;font-weight:600;font-size:9px">${t}mo</div>`;
+    payments[ti].forEach((p,di) => {
+      const sel = ti===2 && di===2;
+      html += `<div style="padding:5px 3px;text-align:center;color:${sel?'#fff':'#9ca3af'};font-weight:${sel?'700':'400'};background:${sel?'rgba(59,130,246,.15)':'transparent'};border:${sel?'1px solid rgba(59,130,246,.4)':'1px solid transparent'};border-radius:${sel?'3px':'0'}">$${p}</div>`;
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  html += '<div style="margin-top:6px;display:flex;justify-content:space-between;font-size:9px;color:#6b7280"><span>Selected: 60mo / $2,000 down</span><span style="color:#22c55e;font-weight:600">$705/mo</span></div>';
+  document.getElementById('dealpad-mock').innerHTML = html;
+})();
+
+// AI Mock
+(function() {
+  const results = [
+    { name: 'Jake Smith', veh: '2021 F-150', eq: '+$8,400', svc: true },
+    { name: 'Lisa Chen', veh: '2022 Explorer', eq: '+$5,200' },
+    { name: 'Robert Kim', veh: '2020 Edge', eq: '+$4,100', svc: true }
+  ];
+  let html = '<div style="display:flex;gap:7px;margin-bottom:8px"><div style="width:20px;height:20px;border-radius:5px;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;flex-shrink:0">U</div><div style="padding:6px 10px;border-radius:8px;background:#161924;border:1px solid rgba(255,255,255,.07);font-size:10px;color:#9ca3af;line-height:1.4">Show me leads with positive trade equity over $3,000</div></div>';
+  html += '<div style="display:flex;gap:7px"><div style="width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;flex-shrink:0;font-weight:700">AI</div><div style="flex:1">';
+  html += '<div style="padding:6px 10px;border-radius:8px;background:#161924;border:1px solid rgba(255,255,255,.07);font-size:10px;color:#9ca3af;line-height:1.4;margin-bottom:6px">Found <span style="color:#22c55e;font-weight:700">23 leads</span> with positive equity. Top opportunities:</div>';
+  html += '<div style="border-radius:6px;border:1px solid rgba(255,255,255,.07);overflow:hidden;font-size:9px">';
+  results.forEach((r,i) => {
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr auto auto;gap:6px;padding:5px 8px;border-bottom:${i<2?'1px solid rgba(255,255,255,.07)':'none'};align-items:center"><span style="color:#fff;font-weight:600">${r.name}</span><span style="color:#6b7280">${r.veh}</span><span style="color:#22c55e;font-weight:700">${r.eq}</span>${r.svc?'<span style="font-size:7px;padding:1px 4px;border-radius:3px;background:rgba(245,158,11,.12);color:#f59e0b;font-weight:700">IN SVC</span>':''}</div>`;
+  });
+  html += '</div></div></div>';
+  document.getElementById('ai-mock').innerHTML = html;
+})();
+
+// Contract Log
+(function() {
+  const rows = [
+    { name: 'Tyler Brooks', veh: 'Mustang GT', stage: 'Menu', mgr: 'Mike D.', c: '#22c55e' },
+    { name: 'Amanda Ross', veh: 'Edge ST-Line', stage: 'Contracts', mgr: 'Sarah K.', c: '#3b82f6' },
+    { name: 'Marcus J.', veh: 'Escape SE', stage: 'Waiting', mgr: '\u2014', c: '#f59e0b' }
+  ];
+  let html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><span style="font-size:10px;font-weight:700;color:#fff">F&I Deal Queue</span><span style="font-size:8px;padding:2px 7px;border-radius:4px;background:rgba(34,197,94,.12);color:#22c55e;font-weight:700">3 Ready</span></div>';
+  html += '<div style="border-radius:6px;border:1px solid rgba(255,255,255,.07);overflow:hidden;font-size:9px">';
+  html += '<div style="display:grid;grid-template-columns:1.2fr 1fr .7fr .7fr;padding:4px 8px;background:#161924;border-bottom:1px solid rgba(255,255,255,.07);font-weight:600;color:#6b7280"><span>Customer</span><span>Vehicle</span><span>Stage</span><span>F&I Mgr</span></div>';
+  rows.forEach((r,i) => {
+    html += `<div style="display:grid;grid-template-columns:1.2fr 1fr .7fr .7fr;padding:5px 8px;border-bottom:${i<2?'1px solid rgba(255,255,255,.07)':'none'};align-items:center"><span style="color:#fff;font-weight:600">${r.name}</span><span style="color:#9ca3af">${r.veh}</span><span style="display:flex;align-items:center;gap:3px"><div style="width:5px;height:5px;border-radius:50%;background:${r.c}"></div><span style="color:#9ca3af">${r.stage}</span></span><span style="color:#6b7280">${r.mgr}</span></div>`;
+  });
+  html += '</div>';
+  html += '<div style="margin-top:6px;display:flex;gap:4px"><div style="flex:1;padding:5px 8px;border-radius:5px;background:#161924;border:1px solid rgba(255,255,255,.07);font-size:9px"><div style="color:#6b7280;font-size:8px">Next Up</div><div style="color:#fff;font-weight:600">Mike D. \u2014 Rotation #2</div></div><div style="flex:1;padding:5px 8px;border-radius:5px;background:#161924;border:1px solid rgba(255,255,255,.07);font-size:9px"><div style="color:#6b7280;font-size:8px">Today\'s PVR</div><div style="color:#22c55e;font-weight:600">$2,847 avg</div></div></div>';
+  document.getElementById('contractlog-mock').innerHTML = html;
+})();
+
+// Personas
+(function() {
+  const personas = [
+    { name: 'The Analyst', icon: '/', desc: 'Data-heavy dashboards', c: '#3b82f6' },
+    { name: 'The Visualizer', icon: '#', desc: 'Pipeline-first view', c: '#8b5cf6' },
+    { name: 'The Driver', icon: '>', desc: 'Action-focused', c: '#22c55e' }
+  ];
+  let html = '';
+  personas.forEach(p => {
+    html += `<div style="padding:8px 6px;border-radius:6px;background:#161924;border:1px solid rgba(255,255,255,.07);text-align:center"><div style="width:22px;height:22px;border-radius:5px;background:${p.c}20;color:${p.c};display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:monospace;margin-bottom:4px">${p.icon}</div><div style="font-size:9px;font-weight:700;color:${p.c};margin-bottom:1px">${p.name}</div><div style="font-size:8px;color:#6b7280">${p.desc}</div></div>`;
+  });
+  document.getElementById('personas-mock').innerHTML = html;
+})();
+
+// Comparison Table
+(function() {
+  const rows = [
+    { label: 'Speed to lead', legacy: 'Minutes to hours', v: 'Under 60 seconds' },
+    { label: 'Follow-up', legacy: 'Manual reminders you ignore', v: 'Autonomous AI agents' },
+    { label: 'Data entry', legacy: '5+ clicks per action', v: 'One-click smart actions' },
+    { label: 'Service drive', legacy: 'Not connected', v: 'Real-time equity alerts' },
+    { label: 'Desking', legacy: 'Separate spreadsheet', v: 'Built-in payment matrix' },
+    { label: 'Mobile', legacy: 'Desktop with mobile bolted on', v: 'Built for the lot' },
+    { label: 'Pricing', legacy: '\u201CCall for a quote\u201D', v: 'Transparent' },
+  ];
+  let html = '';
+  rows.forEach((row,i) => {
+    html += `<div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;padding:14px 20px;border-bottom:${i<rows.length-1?'1px solid rgba(255,255,255,.07)':'none'};font-size:13px"><div style="font-weight:600;color:#fff">${row.label}</div><div style="color:#6b7280">${row.legacy}</div><div style="color:#e5e7eb">${row.v}</div></div>`;
+  });
+  document.getElementById('comparison-rows').innerHTML = html;
+})();
+
+// Pricing
+(function() {
+  const tiers = [
+    { name: 'Starter', price: '49', desc: 'Everything you need to manage leads', items: ['Smart buckets & lead scoring', 'Unified SMS + email', 'Activity tracking & notes', 'Mobile-first PWA', 'Command palette'] },
+    { name: 'Pro', price: '89', desc: 'AI and automation that close deals', pop: true, items: ['Everything in Starter', 'AI lead response agent', 'Autonomous follow-up agent', 'Service drive alerts', 'Deal Pad & proposals', 'Analytics assistant'] },
+    { name: 'Enterprise', price: null, desc: 'For multi-rooftop operations', items: ['Everything in Pro', 'DMS integration', 'Custom cadences & personas', 'F&I contract log', 'Dedicated onboarding', 'API access'] },
+  ];
+  let html = '';
+  tiers.forEach((t,i) => {
+    html += `<div class="fade-in" data-delay="${i*0.08}" style="padding:28px;border-radius:14px;background:#161924;border:${t.pop?'1px solid rgba(59,130,246,.25)':'1px solid rgba(255,255,255,.07)'};position:relative;overflow:hidden">`;
+    if (t.pop) html += '<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#3b82f6,#64748b)"></div><div style="display:inline-block;padding:4px 10px;border-radius:6px;background:rgba(59,130,246,.1);color:#3b82f6;font-size:11px;font-weight:700;margin-bottom:12px">Most popular</div>';
+    html += `<h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:4px">${t.name}</h3><p style="font-size:13px;color:#9ca3af;margin-bottom:16px">${t.desc}</p><div style="margin-bottom:20px">`;
+    if (t.price) html += `<span style="font-size:40px;font-weight:800;color:#fff">$${t.price}</span><span style="font-size:14px;color:#9ca3af"> / user / mo</span>`;
+    else html += '<span style="font-size:20px;font-weight:700;color:#fff">Custom</span>';
+    html += '</div><div style="display:flex;flex-direction:column;gap:10px">';
+    t.items.forEach(item => {
+      html += `<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9ca3af"><div style="width:16px;height:16px;border-radius:50%;background:rgba(100,116,139,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:5px;height:5px;border-radius:50%;background:#64748b"></div></div>${item}</div>`;
+    });
+    html += `</div><button onclick="openLogin()" style="width:100%;margin-top:24px;padding:12px;border-radius:10px;border:${t.pop?'none':'1px solid rgba(255,255,255,.07)'};background:${t.pop?'#3b82f6':'transparent'};color:${t.pop?'#fff':'#9ca3af'};font-size:14px;font-weight:700;cursor:pointer">${t.price?'Get started':'Contact us'}</button></div>`;
+  });
+  document.getElementById('pricing-grid').innerHTML = html;
+  // Re-observe newly created fade-in elements
+  document.querySelectorAll('#pricing-grid .fade-in').forEach(el => obs.observe(el));
+})();
 </script>
 </body>
 </html>
